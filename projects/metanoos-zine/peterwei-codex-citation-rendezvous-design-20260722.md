@@ -6,9 +6,10 @@ Branch: `codex/citation-rendezvous-design`
 
 Repository: `metanoos/zine`
 
-Status: DRAFT — independent review in progress
+Status: READY FOR APPROVAL
 
-Review: revised after two independent review rounds
+Review: three independent cold-review rounds completed; final review scored
+9.5/10 before its last two protocol-precision corrections were applied
 
 ## Problem
 
@@ -183,12 +184,14 @@ A target whose current trace head is deleted or whose publication proof is no
 longer observable is suppressed from active rendezvous. The signed historical
 citation remains inspectable in Replay and later conversation history.
 
-A valid same-author NIP-09 kind-5 removal request also withdraws a carrier or
-target from active rendezvous, even if a relay still serves the referenced
-event. The request must be signed by the event or replaceable-address owner and
-must reference the relevant event id or trace-head address. NIP-09 changes the
-active discovery state, not the cryptographic integrity of cached history, and
-does not imply that every relay erased the bytes.
+A valid same-author NIP-09 kind-5 `e` removal request withdraws the exact
+referenced carrier or target node from active rendezvous, even if a relay still
+serves that event. A same-author `a` request for the replaceable `TraceHead`
+address invalidates that head cache only; it does not withdraw the underlying
+trace. The reader must use the protocol's bounded chain-scan fallback and
+suppress rendezvous only if no verified current chain/publication can be
+resolved. NIP-09 changes active discovery state, not the cryptographic integrity
+of cached history, and does not imply that every relay erased the bytes.
 
 ## Citation Identity
 
@@ -280,9 +283,25 @@ Within one sweep:
 4. preserve separate co-mint, exact-step, same-trace, and cited-author reasons;
 5. deduplicate identical reasons, then reserve one retained reason from every
    present kind/subtype before filling the remaining slots in deterministic
-   order by reason kind, target trace id, exact target id, and carrying head id;
+   order using a canonical per-variant key;
 6. record the observed count and truncation flag for each kind/subtype so a
    dense bucket cannot erase a different evidence kind at the 32-reason cap.
+
+Canonical reason keys compare lowercase hexadecimal bytes field-by-field:
+
+- co-mint: `("co-mint", coordinate, leftCoinNodeId, rightCoinNodeId)`, after
+  ordering the two coin samples by canonical participant order;
+- exact-step co-citation: `("co-citation", "exact-step", targetTraceId,
+  exactTargetNodeId, leftCarryingHeadNodeId, rightCarryingHeadNodeId)`;
+- same-trace co-citation: `("co-citation", "same-trace", targetTraceId,
+  leftExactTargetNodeId, rightExactTargetNodeId, leftCarryingHeadNodeId,
+  rightCarryingHeadNodeId)`, with left/right evidence in canonical participant
+  order;
+- cited-author: `("cited-author", targetTraceId, exactTargetNodeId,
+  carryingHeadNodeId, citingOwner, targetOwner)`.
+
+These keys make deduplication and the 32-reason cap deterministic without
+pretending that co-mint evidence has citation fields.
 
 Candidate ranking is local policy:
 
@@ -385,8 +404,11 @@ global discovery.
 - A candidate is not an admitted peer.
 - Never index private, unsent, ACL-only, or loopback-only citation edges.
 - Verify ids, signatures, target chain, current-head status, deletion status,
-  same-owner NIP-09 removal state, fixed owner, and relay fetchability before
+  same-owner NIP-09 `e` removal state, fixed owner, and relay fetchability before
   surfacing a relationship.
+- Treat a same-owner NIP-09 `a` request for `TraceHead` as head-cache removal,
+  then use bounded chain-scan fallback; do not treat it as whole-trace
+  withdrawal.
 - Suppress self-citation from cited-author candidates.
 - Require distinct citing owners for every co-citation candidate.
 - Do not turn an unknown target owner into a participant merely because their
@@ -410,8 +432,11 @@ Phase 1 must cover:
 - carrier deletion removing outgoing active evidence;
 - target deletion or unavailable publication suppressing active rendezvous
   without erasing historical Replay evidence;
-- a valid same-owner NIP-09 removal request suppressing an otherwise fetchable
+- a valid same-owner NIP-09 `e` request suppressing its otherwise fetchable exact
   carrier or target, while a forged or foreign-owner request has no effect;
+- a same-owner NIP-09 `a` request invalidating the `TraceHead` cache and falling
+  back to a verified chain scan rather than suppressing a still-resolvable
+  trace;
 - two heads from one citing owner never producing a co-citation pair;
 - an unknown target owner supporting admitted-peer co-citation without becoming
   a Phase 1 cited-author participant;
@@ -425,6 +450,8 @@ Phase 1 must cover:
 - deterministic reason and candidate caps;
 - every present reason kind/subtype retaining one representative at the
   32-reason cap, with observed counts and truncation disclosed;
+- deterministic per-variant reason ordering for co-mint, exact-step,
+  same-trace, and cited-author evidence;
 - hostile fan-out stopped by shared byte/time budgets;
 - caller and native cancellation closing in-flight work;
 - co-mint behavior and tests remaining unchanged;
