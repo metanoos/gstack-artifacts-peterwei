@@ -1,0 +1,2 @@
+{"skill":"review","timestamp":"2026-07-22T19:37:18Z","status":"clean","issues_found":0,"critical":0,"informational":0,"quality_score":10.0,"specialists":{"testing":{"dispatched":false,"reason":"covered-inline"},"security":{"dispatched":false,"reason":"scope"}},"findings":[],"commit":"51022e9","via":"ship"}
+{"skill":"design-review-lite","timestamp":"2026-07-22T19:37:18Z","status":"clean","findings":0,"auto_fixed":0,"commit":"51022e9"}
