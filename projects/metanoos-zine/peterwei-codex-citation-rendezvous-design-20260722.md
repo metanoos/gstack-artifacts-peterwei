@@ -1,4 +1,4 @@
-# Design: Citation Rendezvous Alongside Co-Mint
+# Design: Citation rendezvous alongside co-mint
 
 Generated on 2026-07-22
 
@@ -6,9 +6,9 @@ Branch: `codex/citation-rendezvous-design`
 
 Repository: `metanoos/zine`
 
-Status: DRAFT
+Status: DRAFT — independent review in progress
 
-Review: revised after one independent review round
+Review: revised after two independent review rounds
 
 ## Problem
 
@@ -85,6 +85,13 @@ Phase 1 uses the trace owner proven by the target chain back to genesis. It does
 not treat textual contributors, asserted run attribution, `q` owner hints, or
 folder membership as target ownership. Self-citations are suppressed.
 
+Phase 1 emits this candidate only when the verified target owner is the local
+owner or an already admitted readable peer. A target owned by an unknown writer
+may still support co-citation between admitted citing writers, but it does not
+create a reachable cited-author candidate yet. Discovering and admitting a
+previously unknown target owner requires the Phase 3 global design; a relay
+locator for public evidence is not a peer-admission endpoint.
+
 Signal: a writer carried another writer's work into a new trace.
 
 ### Conversation
@@ -124,6 +131,10 @@ Phase 1 emits both:
 The evidence object always names the actual two participants. UI copy changes
 with viewpoint; it never says "you" when the local owner is only the
 introducer.
+
+Every Phase 1 candidate participant must therefore be either the local owner or
+one of the bounded admitted readable peers. Publicly fetchable evidence may
+refer to other owners, but does not silently expand the participant set.
 
 ## Publication Evidence
 
@@ -172,6 +183,13 @@ A target whose current trace head is deleted or whose publication proof is no
 longer observable is suppressed from active rendezvous. The signed historical
 citation remains inspectable in Replay and later conversation history.
 
+A valid same-author NIP-09 kind-5 removal request also withdraws a carrier or
+target from active rendezvous, even if a relay still serves the referenced
+event. The request must be signed by the event or replaceable-address owner and
+must reference the relevant event id or trace-head address. NIP-09 changes the
+active discovery state, not the cryptographic integrity of cached history, and
+does not imply that every relay erased the bytes.
+
 ## Citation Identity
 
 The signed citation pins one exact target Step. That is the portable evidence
@@ -206,6 +224,8 @@ type CitationEvidence = {
   targetRelayUrl: string;
   targetTraceId: string;
   targetOwner: string;
+  verifiedAt: number;
+  publicationObservedAt: number;
 };
 
 type CoCitationEvidence = {
@@ -229,6 +249,11 @@ type RendezvousEvidence =
 This retains both carrying current heads and both exact targets. Every reason
 can be independently re-verified after aggregation.
 
+Co-citation also requires distinct writers:
+`left.citingOwner !== right.citingOwner`. Multiple carrying heads owned by one
+writer may contribute evidence to that writer's history, but never manufacture
+a rendezvous pair with themself.
+
 ## Bounded Sweep and Aggregation
 
 Preserve co-mint behavior, API compatibility, and hardening while factoring a
@@ -249,12 +274,15 @@ Phase 1 limits:
 Within one sweep:
 
 1. resolve each exact target once;
-2. cache verified trace identity, fixed owner, current deletion state, and
-   publication observation;
+2. cache verified trace identity, fixed owner, current deletion state, verified
+   same-owner NIP-09 removal state, and publication observation;
 3. aggregate by canonical peer pair;
 4. preserve separate co-mint, exact-step, same-trace, and cited-author reasons;
-5. deterministically truncate reasons after sorting by reason kind, target trace
-   id, exact target id, and carrying head id.
+5. deduplicate identical reasons, then reserve one retained reason from every
+   present kind/subtype before filling the remaining slots in deterministic
+   order by reason kind, target trace id, exact target id, and carrying head id;
+6. record the observed count and truncation flag for each kind/subtype so a
+   dense bucket cannot erase a different evidence kind at the 32-reason cap.
 
 Candidate ranking is local policy:
 
@@ -305,7 +333,9 @@ Ship additive discovery without changing wire formats or DHT records.
 5. Extract only active social `q` edges.
 6. Resolve each unique target, trace identity, owner, deletion status, and
    publication observation once.
-7. Emit exact-step, same-trace, and cited-author evidence.
+7. Emit exact-step and same-trace evidence only for distinct citing owners, and
+   emit cited-author evidence only when its target owner is the local owner or
+   an admitted readable peer.
 8. Run existing co-mint detection without changing its result semantics.
 9. Aggregate by peer pair while preserving every typed reason.
 10. Render the Introduction Inbox and pass candidates through existing vetting
@@ -346,7 +376,7 @@ Do not reinterpret that record as a citation pointer. Either:
    verifier must execute.
 
 Publishing a citation record must remain gated by the carrying zine's Send
-boundary and the Coins/rendezvous opt-in. Private draft citations never enter
+boundary and the coins/rendezvous opt-in. Private draft citations never enter
 global discovery.
 
 ## Security and Privacy Constraints
@@ -355,8 +385,12 @@ global discovery.
 - A candidate is not an admitted peer.
 - Never index private, unsent, ACL-only, or loopback-only citation edges.
 - Verify ids, signatures, target chain, current-head status, deletion status,
-  fixed owner, and relay fetchability before surfacing a relationship.
+  same-owner NIP-09 removal state, fixed owner, and relay fetchability before
+  surfacing a relationship.
 - Suppress self-citation from cited-author candidates.
+- Require distinct citing owners for every co-citation candidate.
+- Do not turn an unknown target owner into a participant merely because their
+  public evidence has a relay locator.
 - Bound total peers, events, targets, reasons, candidate pairs, bytes, time,
   concurrency, and relay work.
 - Preserve native cancellation across Tauri network calls.
@@ -376,6 +410,11 @@ Phase 1 must cover:
 - carrier deletion removing outgoing active evidence;
 - target deletion or unavailable publication suppressing active rendezvous
   without erasing historical Replay evidence;
+- a valid same-owner NIP-09 removal request suppressing an otherwise fetchable
+  carrier or target, while a forged or foreign-owner request has no effect;
+- two heads from one citing owner never producing a co-citation pair;
+- an unknown target owner supporting admitted-peer co-citation without becoming
+  a Phase 1 cited-author participant;
 - file carriers and file, folder, and coin targets;
 - structural and LLM-scope `q` edges excluded;
 - malformed scope encodings failing closed;
@@ -384,6 +423,8 @@ Phase 1 must cover:
 - publication fetchability distinguished from cryptographic validity;
 - unique targets resolved once per sweep;
 - deterministic reason and candidate caps;
+- every present reason kind/subtype retaining one representative at the
+  32-reason cap, with observed counts and truncation disclosed;
 - hostile fan-out stopped by shared byte/time budgets;
 - caller and native cancellation closing in-flight work;
 - co-mint behavior and tests remaining unchanged;
@@ -396,8 +437,9 @@ Phase 1 must cover:
 ### A. Exact-target local co-citation only
 
 Smallest implementation. Match only when active citations point to the same
-exact Step. Low wire risk, but different revisions of one evolving post
-fragment the conversation and cited authors remain undiscoverable.
+exact Step, and intentionally omit same-trace and cited-author rendezvous. Low
+wire risk, but different revisions of one evolving post fragment the
+conversation and direct writer-to-author introductions are absent.
 
 ### B. Layered local citation rendezvous
 
@@ -421,7 +463,7 @@ behavior that can inform the later global design.
 
 1. Should global citation rendezvous use separate namespaces or a versioned
    typed record?
-2. Does global citation indexing happen for every Sent citation when Coins are
+2. Does global citation indexing happen for every Sent citation when coins are
    enabled, or require a separate per-Send rendezvous choice?
 3. What public-network spam and density evidence is required before global
    citation rendezvous is enabled by default?
