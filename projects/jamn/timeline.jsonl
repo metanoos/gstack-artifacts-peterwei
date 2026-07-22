@@ -1,0 +1,6 @@
+{"skill":"office-hours","event":"started","branch":"unknown","session":"761-1780933398","ts":"2026-06-08T15:43:19.357Z"}
+{"skill":"office-hours","event":"started","branch":"unknown","session":"6206-1781104519","ts":"2026-06-10T15:15:20.213Z"}
+{"skill":"office-hours","event":"completed","branch":"unknown","outcome":"success","session":"office-hours-20260610","ts":"2026-06-10T15:49:54.097Z"}
+{"skill":"plan-eng-review","event":"started","branch":"unknown","session":"11108-1781106697","ts":"2026-06-10T15:51:37.870Z"}
+{"skill":"plan-eng-review","event":"completed","branch":"unknown","outcome":"success","session":"eng-review-20260610","ts":"2026-06-11T00:59:43.646Z"}
+{"skill":"office-hours","event":"completed","branch":"unknown","outcome":"abort","note":"user redirected to deploy after Q1; finding: dont build social platform yet, ship publish as demand probe","ts":"2026-06-14T10:51:09.479Z"}

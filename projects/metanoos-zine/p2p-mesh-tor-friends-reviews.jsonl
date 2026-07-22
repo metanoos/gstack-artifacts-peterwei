@@ -1,0 +1,3 @@
+{"skill":"design-review-lite","timestamp":"2026-07-16T06:56:44Z","status":"clean","findings":0,"auto_fixed":0,"commit":"9927cc2"}
+{"skill":"review","timestamp":"2026-07-16T06:56:44Z","status":"clean","issues_found":0,"critical":0,"informational":0,"commit":"9927cc2","via":"ship"}
+{"skill":"ship","timestamp":"2026-07-16T06:58:10Z","coverage_pct":-1,"plan_items_total":0,"plan_items_done":0,"verification_result":"skipped","version":"0.1.0","branch":"p2p-mesh-tor-friends"}

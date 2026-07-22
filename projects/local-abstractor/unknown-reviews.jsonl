@@ -1,0 +1,4 @@
+{"skill":"plan-eng-review","timestamp":"2026-03-28T05:39:01Z","status":"clean","unresolved":0,"critical_gaps":0,"issues_found":29,"mode":"SCOPE_REDUCED","commit":"unknown"}
+{"skill":"plan-design-review","timestamp":"2026-03-28T06:18:42Z","status":"clean","initial_score":5,"overall_score":9,"unresolved":0,"decisions_made":8,"commit":"unknown"}
+{"skill":"plan-eng-review","timestamp":"2026-03-28T06:31:23Z","status":"clean","unresolved":0,"critical_gaps":0,"issues_found":8,"mode":"SCOPE_REDUCED","commit":"unknown"}
+{"skill":"plan-eng-review","timestamp":"2026-03-28T10:34:23Z","status":"clean","unresolved":0,"critical_gaps":0,"issues_found":20,"mode":"SCOPE_REDUCED","commit":"unknown"}

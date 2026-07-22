@@ -1,0 +1,4 @@
+{"skill":"plan-eng-review","timestamp":"2026-07-15T20:51:59Z","status":"issues_open","unresolved":3,"critical_gaps":2,"issues_found":11,"mode":"FULL_REVIEW","commit":"9a5d6d8"}
+{"skill":"plan-eng-review","timestamp":"2026-07-16T00:18:33Z","status":"clean","unresolved":0,"critical_gaps":0,"issues_found":7,"mode":"SCOPE_REDUCED","commit":"9a5d6d8"}
+{"skill":"plan-eng-review","timestamp":"2026-07-16T02:11:35Z","status":"clean","unresolved":0,"critical_gaps":0,"issues_found":29,"mode":"FULL_REVIEW","commit":"9a5d6d8"}
+{"skill":"review","timestamp":"2026-07-16T00:00:00Z","status":"DONE_WITH_CONCERNS","issues_found":10,"critical_count":6,"informational_count":4,"commit":"9a5d6d8"}

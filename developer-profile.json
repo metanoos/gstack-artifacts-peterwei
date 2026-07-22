@@ -1,0 +1,122 @@
+{
+  "identity": {},
+  "declared": {},
+  "inferred": {
+    "values": {
+      "scope_appetite": 0.5,
+      "risk_tolerance": 0.5,
+      "detail_preference": 0.5,
+      "autonomy": 0.5,
+      "architecture_care": 0.5
+    },
+    "sample_size": 12,
+    "diversity": {
+      "skills_covered": 3,
+      "question_ids_covered": 12,
+      "days_span": 1
+    }
+  },
+  "gap": {},
+  "overrides": {},
+  "sessions": [
+    {
+      "date": "2026-06-08T13:30:00Z",
+      "mode": "startup",
+      "project_slug": "jamn",
+      "signal_count": 3,
+      "signals": [
+        "pushback",
+        "taste",
+        "agency"
+      ],
+      "design_doc": "/Users/peterwei/.gstack/projects/jamn/peterwei-unknown-design-20260608-132634.md",
+      "assignment": "Talk to 5 people this week. Ask how they find out whats happening locally. Listen for the workaround.",
+      "resources_shown": [],
+      "topics": [
+        "geolocation",
+        "place-based-community",
+        "chat"
+      ]
+    },
+    {
+      "date": "2026-07-16T22:14:45Z",
+      "mode": "startup",
+      "project_slug": "metanoos-zine",
+      "signal_count": 1,
+      "signals": [
+        "agency"
+      ],
+      "design_doc": "/Users/peterwei/.gstack/projects/metanoos-zine/peterwei-codex-headless-press-design-20260716-151445.md",
+      "assignment": "Within seven days, send targeted discovery requests to the current owner of writer hiring at Contentellect and at least four comparable agencies, seeking three interviews about their most recent freelance-writer hire before showing Zine.",
+      "resources_shown": [],
+      "topics": [
+        "writing auditions",
+        "customer discovery",
+        "AI-assisted hiring"
+      ],
+      "ts": "2026-07-16T22:14:53.665Z"
+    },
+    {
+      "date": "2026-07-17T04:02:28Z",
+      "mode": "resources",
+      "project_slug": "metanoos-zine",
+      "signal_count": 0,
+      "signals": [],
+      "design_doc": "",
+      "assignment": "",
+      "resources_shown": [
+        "https://www.youtube.com/watch?v=z1iF1c8w5Lg",
+        "https://www.youtube.com/watch?v=rWUWfj_PqmM",
+        "https://paulgraham.com/schlep.html"
+      ],
+      "topics": [],
+      "ts": "2026-07-17T04:02:28.502Z"
+    },
+    {
+      "date": "2026-07-18T20:18:06Z",
+      "mode": "builder",
+      "project_slug": "light-runners",
+      "signal_count": 4,
+      "signals": [
+        "pushback",
+        "taste",
+        "agency",
+        "defended_premise_with_reasoning"
+      ],
+      "design_doc": "/Users/peterwei/.gstack/projects/light-runners/peterwei-unknown-design-20260718-131806.md",
+      "assignment": "Run one low-tech four-player park playtest using cones as Lumen Gates and a human referee before implementing networking; record whether Gate density, self-collision, and the leader bounty create understandable choices.",
+      "resources_shown": [],
+      "topics": [
+        "game-design",
+        "location-ar",
+        "multiplayer"
+      ],
+      "ts": "2026-07-18T20:18:38.494Z"
+    }
+  ],
+  "signals_accumulated": {
+    "pushback": 2,
+    "taste": 2,
+    "agency": 3,
+    "defended_premise_with_reasoning": 1
+  },
+  "resources_shown": [
+    "https://www.youtube.com/watch?v=z1iF1c8w5Lg",
+    "https://www.youtube.com/watch?v=rWUWfj_PqmM",
+    "https://paulgraham.com/schlep.html"
+  ],
+  "topics": [
+    "geolocation",
+    "place-based-community",
+    "chat",
+    "writing auditions",
+    "customer discovery",
+    "AI-assisted hiring",
+    "game-design",
+    "location-ar",
+    "multiplayer"
+  ],
+  "migrated_at": "2026-06-08T20:29:40.301Z",
+  "schema_version": 1,
+  "derived_at": "2026-07-17T23:54:57.093Z"
+}
