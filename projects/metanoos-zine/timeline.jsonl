@@ -240,3 +240,4 @@
 {"skill":"investigate","event":"started","branch":"main","session":"54260-1784779650","ts":"2026-07-23T04:07:31.116Z"}
 {"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"765","session":"97894-1784778935","ts":"2026-07-23T04:08:21.114Z"}
 {"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"0","session":"live-session-reconnect-subagent","ts":"2026-07-23T04:11:33.391Z"}
+{"skill":"review","event":"completed","branch":"main","outcome":"success","duration_s":"1043","session":"67386-1784780634","ts":"2026-07-23T04:41:18.142Z"}
