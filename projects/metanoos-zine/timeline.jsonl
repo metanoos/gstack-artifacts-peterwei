@@ -221,3 +221,6 @@
 {"skill":"investigate","event":"started","branch":"main","session":"52372-1784771569","ts":"2026-07-23T01:52:49.710Z"}
 {"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":0,"session":"codex-mint","ts":"2026-07-23T02:01:23.117Z"}
 {"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"522","session":"52372-1784771569","ts":"2026-07-23T02:01:31.592Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"1931","session":"codex-20260722-play","ts":"2026-07-23T02:04:14.821Z"}
+{"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":"1200","session":"codex-20260722-play-browse","ts":"2026-07-23T02:04:15.131Z"}
+{"skill":"investigate","event":"started","branch":"main","session":"28179-1784772373","ts":"2026-07-23T02:06:13.537Z"}
