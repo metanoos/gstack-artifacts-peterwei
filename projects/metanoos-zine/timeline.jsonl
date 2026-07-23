@@ -230,3 +230,4 @@
 {"skill":"investigate","event":"started","branch":"main","session":"89836-1784773965","ts":"2026-07-23T02:32:46.033Z"}
 {"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"594","session":"89836-1784773965","ts":"2026-07-23T02:42:39.945Z"}
 {"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":300,"session":"investigate-stale-client-20260722","ts":"2026-07-23T02:49:51.341Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":900,"session":"investigate-onboarding-process-schema-20260722","ts":"2026-07-23T03:01:50.157Z"}
