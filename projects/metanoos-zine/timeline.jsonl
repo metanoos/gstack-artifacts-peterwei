@@ -245,3 +245,8 @@
 {"skill":"review","event":"completed","branch":"codex/live-collaboration-stage-replay","outcome":"success","duration_s":"900","session":"safety-retention-1784792743","ts":"2026-07-23T07:45:43.820Z"}
 {"skill":"review","event":"completed","branch":"codex/live-collaboration-stage-replay","outcome":"success","duration_s":"900","session":"safety-retention-1784792768","ts":"2026-07-23T07:46:08.956Z"}
 {"skill":"review","event":"completed","branch":"codex/safe-reconstruction","outcome":"success","duration_s":"900","session":"codex-1784794969","ts":"2026-07-23T08:22:49.790Z"}
+{"skill":"ship","event":"completed","branch":"codex/live-collaboration-stage-replay","outcome":"error","duration_s":"291","session":"72121-1784796004","ts":"2026-07-23T08:44:55.470Z"}
+{"skill":"investigate","event":"started","branch":"codex/live-collaboration-stage-replay","session":"4119-1784796397","ts":"2026-07-23T08:46:37.758Z"}
+{"skill":"review","event":"started","branch":"codex/live-collaboration-stage-replay","session":"28811-1784796819","ts":"2026-07-23T08:53:39.673Z"}
+{"skill":"investigate","event":"completed","branch":"codex/live-collaboration-stage-replay","outcome":"success","duration_s":"1937","session":"4119-1784796397","ts":"2026-07-23T09:19:04.442Z"}
+{"skill":"investigate","event":"started","branch":"codex/post-collaboration-main","session":"codex-1784844029","ts":"2026-07-23T22:00:30.262Z"}
