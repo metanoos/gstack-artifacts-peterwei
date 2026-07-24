@@ -92,18 +92,59 @@
         "multiplayer"
       ],
       "ts": "2026-07-18T20:18:38.494Z"
+    },
+    {
+      "date": "2026-07-24T22:46:25Z",
+      "mode": "builder",
+      "project_slug": "metanoos-zine",
+      "signal_count": 5,
+      "signals": [
+        "pushback",
+        "domain_expertise",
+        "taste",
+        "agency",
+        "defended_premise"
+      ],
+      "design_doc": "/Users/peterwei/.gstack/projects/metanoos-zine/peterwei-codex-post-collaboration-main-design-20260724-152346.md",
+      "assignment": "Complete Gate 1a on one real public editing trace: inventory fields, reconstruct snapshots exactly, emit canonical Episode IR twice, and verify one deleted-and-replaced trajectory before building renderers.",
+      "resources_shown": [],
+      "topics": [
+        "provenance",
+        "replay",
+        "mobile-collaboration"
+      ],
+      "ts": "2026-07-24T22:46:57.249Z"
+    },
+    {
+      "date": "2026-07-24T23:10:00Z",
+      "mode": "resources",
+      "project_slug": "metanoos-zine",
+      "signal_count": 0,
+      "signals": [],
+      "design_doc": "",
+      "assignment": "",
+      "resources_shown": [
+        "https://paulgraham.com/genius.html",
+        "https://www.youtube.com/watch?v=ksGNfd-wQY4"
+      ],
+      "topics": [],
+      "ts": "2026-07-24T23:09:32.891Z"
     }
   ],
   "signals_accumulated": {
-    "pushback": 2,
-    "taste": 2,
-    "agency": 3,
-    "defended_premise_with_reasoning": 1
+    "pushback": 3,
+    "taste": 3,
+    "agency": 4,
+    "defended_premise_with_reasoning": 1,
+    "domain_expertise": 1,
+    "defended_premise": 1
   },
   "resources_shown": [
     "https://www.youtube.com/watch?v=z1iF1c8w5Lg",
     "https://www.youtube.com/watch?v=rWUWfj_PqmM",
-    "https://paulgraham.com/schlep.html"
+    "https://paulgraham.com/schlep.html",
+    "https://paulgraham.com/genius.html",
+    "https://www.youtube.com/watch?v=ksGNfd-wQY4"
   ],
   "topics": [
     "geolocation",
@@ -114,7 +155,10 @@
     "AI-assisted hiring",
     "game-design",
     "location-ar",
-    "multiplayer"
+    "multiplayer",
+    "provenance",
+    "replay",
+    "mobile-collaboration"
   ],
   "migrated_at": "2026-06-08T20:29:40.301Z",
   "schema_version": 1,
