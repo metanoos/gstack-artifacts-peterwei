@@ -71,7 +71,7 @@ I notice the annotation overlay previously returned `null` whenever the file had
 zero annotations, including when post-Step analysis had produced an error. That
 made a failed first annotation indistinguishable from a Step with nothing to
 analyze. The fix presents a compact, assertive trace-analysis alert in that
-state and clears stale errors after the next successful observation. All 1,529
+state and clears stale errors after the next successful observation. All 1,531
 client tests and typechecks passed. The rebuilt native app returned to its vault
 lock screen, so the alert's production rendering could not be re-exercised
 without the owner's passphrase.
@@ -283,6 +283,19 @@ experience is consistently an instrument rather than a dashboard or chat app.
 
 PR summary: Design review found 8 issues and fixed 3. Design score B− → B;
 AI slop score A → A.
+
+## Verification and cleanup
+
+- `npm test`: 1,531 passed, 0 failed
+- `npm run typecheck`: passed
+- `npm run build`: passed
+- `npm run tauri build -- --debug`: passed; current `.app` and `.dmg` produced
+- Final read-only browser audit: current `AI` navigation verified; 387ms cached
+  local load; expected read-only key errors remain
+- The disposable `design-review-trace.md` audit zine remains in the `metanoos`
+  vault because the rebuilt app returned to the lock screen. Removing it through
+  the product's recoverable Oblivion flow requires the vault owner to unlock the
+  app; the audit did not request or handle that passphrase.
 
 ## Recommended Gate 2
 
