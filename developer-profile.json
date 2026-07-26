@@ -129,15 +129,39 @@
       ],
       "topics": [],
       "ts": "2026-07-24T23:09:32.891Z"
+    },
+    {
+      "date": "2026-07-26T16:07:20Z",
+      "mode": "startup",
+      "project_slug": "metanoos-zine",
+      "signal_count": 6,
+      "signals": [
+        "named_users",
+        "pushback",
+        "domain_expertise",
+        "taste",
+        "agency",
+        "defended_premise"
+      ],
+      "design_doc": "/Users/peterwei/.gstack/projects/metanoos-zine/peterwei-codex-zine-design-20260726-090720.md",
+      "assignment": "Put a clean-first no-account edition of Writing Under Observation in front of Eric without explaining Ghost Trails; separately record discovery, comprehension, use, and the exact process-specific questions he asks.",
+      "resources_shown": [],
+      "topics": [
+        "trace-native writing",
+        "ghost trails",
+        "folder playback"
+      ],
+      "ts": "2026-07-26T20:47:04.519Z"
     }
   ],
   "signals_accumulated": {
-    "pushback": 3,
-    "taste": 3,
-    "agency": 4,
+    "pushback": 4,
+    "taste": 4,
+    "agency": 5,
     "defended_premise_with_reasoning": 1,
-    "domain_expertise": 1,
-    "defended_premise": 1
+    "domain_expertise": 2,
+    "defended_premise": 2,
+    "named_users": 1
   },
   "resources_shown": [
     "https://www.youtube.com/watch?v=z1iF1c8w5Lg",
@@ -158,7 +182,10 @@
     "multiplayer",
     "provenance",
     "replay",
-    "mobile-collaboration"
+    "mobile-collaboration",
+    "trace-native writing",
+    "ghost trails",
+    "folder playback"
   ],
   "migrated_at": "2026-06-08T20:29:40.301Z",
   "schema_version": 1,
