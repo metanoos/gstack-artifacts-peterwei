@@ -68,7 +68,7 @@ Record behavior and exact questions, not compliments or general impressions.
 
 This optional session tests discoverability, comprehension, and reader usefulness as separate outcomes. It does not test whether Zine made the essay stronger or whether another writer would adopt it. A missed control is a discoverability failure; a discovered but unhelpful Ghost is a usefulness failure.
 
-For later comparison, preserve the clean-first reading notes before Ghosts are shown. Stronger-writing claims require repeated writing sessions and an agreed baseline, not post-hoc interpretation of Eric's reaction.
+For later comparison, preserve the clean-first reading notes before Ghosts are shown. Stronger-writing claims require repeated writing sessions and an agreed baseline, not post-hoc interpretation of Eric's response.
 
 ## Goals
 
@@ -77,7 +77,7 @@ For later comparison, preserve the clean-first reading notes before Ghosts are s
 - Preserve exact deletions outside the surviving document.
 - Make substantive deletion visible as a brief content-bearing afterimage so recoverable erasure becomes a learned writing gesture without delaying or altering Backspace.
 - Let the writer inspect, hide, replay, and selectively publish Ghosts.
-- Make the relationship between material text, discarded alternatives, voices, citations, and attestations legible in the reading surface.
+- Make the relationship between material text, discarded alternatives, voices, citations, and reactions legible in the reading surface.
 - Give AI access to explicitly authorized trace evidence without silently broadening scope.
 - Make the primary human–model exchange happen inside the file through four explicit actions—Append, Rewrite, Reply, and Quote-reply—with material output attributed immediately and commentary kept in the margin.
 - Treat files and folders as stable authored objects with exact history.
@@ -97,7 +97,7 @@ For later comparison, preserve the clean-first reading notes before Ghosts are s
 - Treating a folder as a remembered desktop layout.
 - Letting AI read private Ghosts simply because they are available locally.
 - Building social feeds, marketplace mechanics, or generalized collaboration before the personal writing-and-conversation loop works.
-- Operating as an LLM traffic witness or attestation service. Zine captures the slot; it does not fill it.
+- Operating as a third-party LLM traffic witness or proof service. Zine retains the per-attempt reference slot; it does not fill it.
 - Live collaborative editing through operational transformation or streamed CRDT operations. It would relay keystroke-frequency operations, reversing the boundary that keeps fine-grained actions off the relay, and it would silently resolve overlapping prose into character-interleaved text that can be syntactically merged and semantically nonsensical. Stale-head lockout and commutative auto-merge address forking without either cost. Any future multi-person live editing is a separate product decision whose keystroke-exposure tradeoff must be explicit.
 
 
@@ -114,7 +114,7 @@ Rejected as the product center because it optimizes for a reader demonstration w
 
 ### B. Personal Writing and Conversation Instrument
 
-Build the personal loop first: ordinary writing, exact deletion capture, span-bound inline model reading, standalone conversation research, files and folders with stable identity, citations, Ghost inspection, recoverable export, encrypted push-only relay backup, and direct per-Step time anchoring. Keep publication small and delay multi-device authoring, general third-party content attestations, recursive folder playback, and cross-platform parity until the daily loop is trustworthy.
+Build the personal loop first: ordinary writing, exact deletion capture, span-bound inline model reading, standalone conversation research, files and folders with stable identity, citations, Ghost inspection, recoverable export, encrypted push-only relay backup, and direct per-Step time anchoring. Keep publication small and delay multi-device authoring, reactions, recursive folder playback, and cross-platform parity until the daily loop is trustworthy.
 
 Chosen. Folder identity and direct membership are pulled into the first data model because conversations and essays need authored research scope. Advanced folder projections are not required for the first usable instrument.
 
@@ -122,7 +122,7 @@ This is not the earlier folderless single-file approach. It preserves the founde
 
 ### C. Distributed Provenance Platform
 
-Build stable file and folder identity, exact event history, tab-local playback, all projections, multi-device authoring, cross-device authorization, conflict handling, attestations, and desktop/web/mobile conformance from the beginning.
+Build stable file and folder identity, exact event history, tab-local playback, all projections, multi-device authoring, cross-device authorization, conflict handling, reactions, and desktop/web/mobile conformance from the beginning.
 
 Deferred as an initial delivery path. Its protocol requirements remain design constraints for later sync and publication releases, but they do not sit in front of Peter's first dependable writing-and-conversation loop.
 
@@ -131,7 +131,7 @@ Deferred as an initial delivery path. Its protocol requirements remain design co
 Zine has three separate but connected layers:
 
 1. **Material** — the text and collection structure that presently survive.
-2. **Evidence** — exact authored events, including discarded spans, Steps, voice attribution, citations, and attestations.
+2. **Evidence** — exact authored events, including discarded spans, Steps, voice attribution, and citations, plus observed reactions and timestamp proofs.
 3. **Projection** — a particular rendering or disclosure of material and evidence for a writer, reader, folder view, AI request, or publication.
 
 No projection is authoritative. This document uses four distinct terms:
@@ -174,7 +174,7 @@ A file owns:
 - Ghost span evidence;
 - outgoing citations;
 - incoming relationship observations;
-- relationships to zines, issues, and attestations; and
+- relationships to zines and issues; and
 - file-scoped AI memory and disclosure choices.
 
 A conversation is a first-class file presentation, not a separate chat database. It adds an ordered turn model, participant voices, provider/session receipts, tool and context observations, and exact turn/span citation targets while retaining ordinary file identity, folder membership, Steps, Ghosts, issues, and publication rules.
@@ -184,8 +184,8 @@ A folder owns:
 - stable identity and mutable name;
 - ordered direct membership;
 - membership, move, rename, and reorder history;
-- its authored folder page;
-- folder-level voices, citations, and relationships to zines, issues, and attestations;
+- its folder page — a content manager over ordered membership, carrying annotations on members rather than authored prose;
+- folder-level voices, citations, and relationships to zines and issues;
 - folder-scoped AI memory and disclosure choices; and
 - projections over its descendant trace.
 
@@ -206,7 +206,6 @@ Representative event families:
 - conversation-file turn prepare, send, receive, revise, fork, and compact;
 - voice attribution and origin evidence;
 - citation create, update, and revoke;
-- attestation create and revoke;
 - AI context authorization, request receipt, attributed material result, and commentary result;
 - zine create, issue freeze, share, withdraw, and zine tombstone; and
 - explicit Step.
@@ -262,7 +261,7 @@ A schema-valid event is not necessarily trace-valid. The trace validator must re
 
 Cross-resource operations use one atomic transaction envelope containing all affected resource events. A reducer either applies the complete valid transaction or none of it. Causal ancestry determines dependency. Actor sequence and event ID provide stable presentation order for otherwise concurrent events; they never silently choose one conflicting prose state as the winner. Wall-clock time is never authoritative.
 
-A resource may have several valid concurrent heads. Non-overlapping concurrent text edits are commutative under the character-level position identities used for Ghost anchoring and reduce together automatically without a conflict artifact. Overlapping edits—two heads touching the same identity range, including concurrent insertions claiming the same neighbor gap—always produce an explicit conflict artifact containing every head and common ancestor and always require an authored merge. No branch is discarded. Publication and attestation block while the selected projection remains conflicted. Gate 0 chooses a position-identity scheme whose single-writer subset serves stable Ghost anchoring and remains forward compatible; Gate 4 implements and tests its concurrent placement behavior.
+A resource may have several valid concurrent heads. Non-overlapping concurrent text edits are commutative under the character-level position identities used for Ghost anchoring and reduce together automatically without a conflict artifact. Overlapping edits—two heads touching the same identity range, including concurrent insertions claiming the same neighbor gap—always produce an explicit conflict artifact containing every head and common ancestor and always require an authored merge. No branch is discarded. Publication blocks while the selected projection remains conflicted. Gate 0 chooses a position-identity scheme whose single-writer subset serves stable Ghost anchoring and remains forward compatible; Gate 4 implements and tests its concurrent placement behavior.
 
 ### Stale-Head Lockout
 
@@ -304,6 +303,10 @@ Rules:
 - Large deletes collapse visually by default.
 - Ghost visibility is private by default and independent of capture.
 - Payloads entered through classified protected fields or explicitly excluded regions must never enter Ghost events. An unclassified secret pasted into ordinary author text may still be captured; secret scanning may warn, quarantine, or require classification but is defense-in-depth rather than a completeness guarantee.
+
+**Membership removal is typed discard evidence, not a text Ghost.** Removing a member from a folder produces a `membership_discard` projection keyed to folder and member resource, following the same pattern as `query_rejection` under Model-Assisted Filtering: it shares Ghost visibility, disclosure, and inspection semantics but is not character-anchored and does not use the text-Ghost reducer. Position identity governs scalars and has nothing to say about edges.
+
+Edge discards need their own disposition vocabulary, because the text categories do not map. `MOVED` must cover relocation to another folder and must never render as a decline — a work moved elsewhere is the single most common removal and the one most damaging to misread, since a folder discard names a resource and, when published, names its author. Removals incidental to reordering produce no discard evidence at all.
 
 
 
@@ -472,6 +475,7 @@ Zine captures keystroke-level timing as a distinct stream and builds a longitudi
 - The native desktop input bridge records per-keystroke key-down and key-up timestamps at platform resolution, plus per-action elapsed time. The biometric clock and event source come from the Tauri host, not DOM event timestamps in the system webview.
 - Records enter a separate encrypted local store, **not** the authored event set.
 - Capture is on by default with an explicit off switch. Disabling it never disables writing, Ghosts, trace, Commits, or sync.
+- **Off means purge, not pause.** Disabling capture deletes accumulated raw timing and any derived profile rather than merely halting collection, and a separate explicit purge is available while capture stays on. Retained-but-unused timing is a store that later features and crash paths can reach; the only durable control over data that was never needed is its absence.
 - IME, accessibility, dictation, and mobile-mediated input carry separate origin classes and never silently train the physical-keyboard profile as if they were equivalent samples.
 
 
@@ -480,11 +484,14 @@ Zine captures keystroke-level timing as a distinct stream and builds a longitudi
 
 Biometric records never enter Commits or Trace Packets. Their volume and disclosure profile differ from authored trace. The stream syncs only through a separately encrypted, explicitly opted-in channel and is excluded from AI context, ordinary trace export, and issues by default. Any biometric archive is a separately named encrypted export; it is never smuggled into a normal Zine archive.
 
+Separation is enforced against every egress path, not only the networked ones. The Gate 1 and Gate 2b egress allowlists cover relay, model, witness, and calendar traffic; **crash reports, diagnostic dumps, and telemetry are separately excluded**, because an in-memory timing buffer captured at fault time is not network traffic and would not fail those gates. Native crash handlers must scrub or never map the biometric store.
+
 ### Enrollment and Profile
 
 - A profile is built over multiple sessions. The interface shows sample count and an explicit `established` state; scores computed before establishment are labeled provisional.
 - Both raw records and the derived model are retained: raw samples permit future re-analysis, while the versioned model supports verification.
 - A hash of an enrolled model snapshot may be anchored as a sealed commitment under Timestamp Anchoring. The commitment gains evidentiary weight with age and can be opened under challenge; it never publishes the model itself.
+- **Profiles and their commitments are per-identity.** One identity, one profile, one anchored commitment. Zine never trains a profile across two pubkeys, never scores one identity's trace against another's profile even locally, and never reuses a commitment across identities. The linkage vector here is the anchor, not the score: two identities disclosing against the same committed hash are trivially the same author, which would de-pseudonymize a pen name through the evidence feature itself. The local comparison is what creates the temptation to disclose, so it is prohibited rather than merely undisplayed.
 - Hardware, layout, injury, fatigue, time-of-day, and input-origin cohorts remain labeled. Zine does not turn normal drift into an identity failure.
 
 
@@ -514,6 +521,8 @@ Material text and Ghosts are independent display layers:
 - Text off, Ghosts off: blocked because the tab would have no readable content.
 
 Layer choice is per tab instance and may differ between two tabs showing the same file.
+
+These rules assume a material text layer. A **folder tab has none** — its readable content is the ordered member list, which is always present and cannot be toggled off. A folder therefore has two independent layers of its own: member annotations and membership Ghosts. Both may be hidden simultaneously, because the member list still renders.
 
 Promoted Ghost evidence renders in the margin, outside the document's text flow. Each anchored position shows a ghost-count badge; expanding it reveals the promoted alternatives without changing line breaks or document geometry. The live afterimage is a separate ephemeral overlay at the collapse point. Neither toggling Ghosts nor expanding a margin item may reflow material text.
 
@@ -676,7 +685,9 @@ Fresh model runs render in a transient `unrevised` state until a human edit touc
 
 Commentary response IDs and typed ranges are stable Zine citation targets even though they are not standalone Nostr events. Dismissing, forking, or later orphaning an annotation never mutates its original bytes or receipt. Commentary dismissal is not a Ghost because commentary was never material.
 
-Author notes and model commentary are the same object with different voices: an **annotation** anchored to a material span or Ghost, carrying a voice, rendered in the margin. Reply, Quote-reply, and Interview produce annotations in a model voice; a writer's note produces one in the writer's voice. There is one type, one margin system, and one disclosure grammar.
+Author notes and model commentary are the same object with different voices: an **annotation** anchored to a material span, a Ghost, or a **folder membership entry**, carrying a voice, rendered in the margin. Reply, Quote-reply, and Interview produce annotations in a model voice; a writer's note produces one in the writer's voice. There is one type, one margin system, and one disclosure grammar.
+
+The membership anchor is what lets an ordered folder carry per-member rationale — *this one because X, this one as counterpoint* — without giving folders authored prose. It is a third anchor kind on the existing object, not a second annotation type.
 
 - **Never required.** Most Ghosts are never annotated; inferred disposition carries them. Notes exist where the writer knows something the evidence cannot show.
 - **Separate from the Ghost payload.** A Ghost is exact removed bytes. An annotation is a distinct event referencing it and never contaminates those bytes.
@@ -764,7 +775,7 @@ Conversation compaction is a prompt and reading projection, not storage compacti
 
 Storage compaction is defined separately under Trace Growth. It may change snapshots and indexes but cannot use a conversation summary as a substitute for retained authored actions.
 
-Conversation turns use the same tab anatomy as essays: voices and Citations In precede the turn stream; Citations Out, attestations, and the Ghost transport follow it. On every authoring client, inline collaboration is the primary writing flow; conversation files remain the primary surface for standalone model research. Reader-only mobile/web clients render disclosed projections only.
+Conversation turns use the same tab anatomy as essays: voices and Incoming relationships precede the turn stream; Citations Out and the Ghost transport follow it. On every authoring client, inline collaboration is the primary writing flow; conversation files remain the primary surface for standalone model research. Reader-only mobile/web clients render disclosed projections only.
 
 ## Sources and Queries
 
@@ -786,7 +797,7 @@ Safety: all fetched content is `UNTRUSTED_EXTERNAL` and flows into LLM context o
 - **Typed rendering.** Event ID and signature are verified before materialization. Plain text is normalized into an inert text projection; markup is sanitized and never executes; structured and binary payloads use a typed viewer and content-addressed blob reference. Exact-span citation is available only over a canonical text projection whose normalization/version and position boundaries are recorded.
 - **Its arrival is an observation event** recording observer, relays that served it, retrieval time, and freshness—the same shape already used for incoming citations.
 - **Citations Out from an essay to an exact span of a source** use the same span-citation mechanism as conversation turns.
-- A signed event held locally remains verifiable after the relay stops serving it. This is the durability advantage over citing a URL.
+- A signed event held locally remains verifiable after the relay stops serving it. This is the durability advantage over citing a URL, and it holds in two degrees worth distinguishing. **For the holder** it is unconditional: the verified tuple is local, so the citation resolves even if every relay and the author disappear. **For a third party** following that citation, it holds because published issues are never superseded and are therefore retained by ordinary relay behavior — a property of the addressing rule under Nostr Publication, not an assumption about any particular host staying up.
 
 `query` is an authored resource: filters, relays, and an optional filter prompt, with run history as observation events.
 
@@ -819,6 +830,21 @@ Citations are published as public events carrying hash-addressed references to w
 
 Peer discovery over a distributed hash table is a scale answer to relay fragmentation, not a near-term requirement. A DHT with one participant is not a network, and bootstrap would still begin through known peers or relays. Rendezvous **semantics** are fixed now; the discovery **mechanism** stays behind the same source interface so a DHT can be added later without changing citation identity or query reduction. The native desktop host preserves that option, while a browser-only authoring architecture would foreclose native peer discovery.
 
+### Following and Redistribution
+
+Citation rendezvous answers *who else cites X* but presupposes knowing X exists. Nothing in the model brings a reader back to a body of work, and pull-only discovery has a worse cold start than a feed: every artifact earns attention from cold, every time. Subscription closes that gap without importing anything the non-goals exclude — RSS and mailing lists were pure subscription with no algorithm, no counts, and no notifications, and they remain the healthiest distribution mechanism writing has had.
+
+The mechanism is asymmetric on purpose.
+
+- **Read the follow graph; never publish one.** [NIP-02](https://github.com/nostr-protocol/nips/blob/master/02.md) kind-3 contact lists are already public across the network, so *this pubkey is followed by several people I read* is answerable through the existing query mechanism at no cost. Consuming that graph commits to nothing.
+- **The operational read list stays local.** The set of pubkeys and relays Zine polls is client state, never an authored event and never published. A published kind 3 is a signed, queryable subscriber tally and a continuous record of everything the reader consumes; RSS's immunity to engagement mechanics came from having no back-channel at all, which a published contact list discards.
+- **The outbound signal is a blogroll**, published as an ordinary zine whose issue cites authors and works. It is the endorsement graph rather than the consumption graph, which is the graph the transitive query actually wants: a curated list means *these are worth reading*, while kind 3 means only *these get fetched*. It is authored, dated, occasional, and subject to the same disclosure grammar as any issue.
+- **Redistribution is [NIP-18](https://github.com/nostr-protocol/nips/blob/master/18.md) kind 6.** A reader places an issue in front of their own readers. Zine emits and receives reposts, renders received ones as identities with freshness under the Incoming rule, and never counts, ranks, orders, or feeds them anywhere. Reposts are structurally dependent on the read side — they are the same channel used from the writer's end — and they are the only mechanism by which a reader learns a work exists without being handed a link.
+
+The cost is stated rather than mitigated: **a reader who publishes no blogroll is unreachable through the same transitive query they rely on.** Asymmetry is a deliberate choice to consume a public graph without contributing an involuntary one, and it is honest only while the editorial list actually gets written. Bootstrapping still requires one introduction obtained out of band; reposts compound from there.
+
+This subsection is Gate 6, alongside Queries and inboxes, and inherits their discipline: no feed, no notifications, no unread counts, no follower or repost totals anywhere in the interface.
+
 ## Reflection
 
 A periodic reflection surface renders the writer's own behavior back to them: revision volume, abandonment patterns, session shape, biometric-profile drift, and which passages were reworked most.
@@ -844,25 +870,24 @@ Each row has exactly one acting voice:
 
 An operation never silently combines voices. A different voice requires a different row or an explicit row voice change. AI rows and keyboard rows use the same alignment grammar while retaining distinct origin labels.
 
-The palette exposes the four model actions according to current scope: Append and Reply without a selected span; Rewrite and Quote-reply with one. The commentary row also selects Respond or Interview mode. A commentary response exposes Fork to Conversation when permitted by its type and anchor state. Publication is labeled Publish and opens the Freeze/Share dialog. `Send` is reserved for transmitting a frozen model request.
+The palette exposes the four model actions according to current scope: Append and Reply without a selected span; Rewrite and Quote-reply with one. The commentary row also selects Respond or Interview mode. A commentary response exposes Fork to Conversation when permitted by its type and anchor state. The writer row exposes Step and Publish. Publication is labeled Publish and opens the Freeze/Share dialog. `Send` is reserved for transmitting a frozen model request.
 
 ## Tab Anatomy
 
-Every file and folder tab uses the same vertical argument structure:
+Every file and folder tab uses the same vertical structure:
 
 1. Tab identity and view kind.
 2. Voice list.
-3. Citations In list.
-4. Material content plus visually distinct span-bound annotations.
-5. Citations Out list.
-6. Attestations list.
-7. Bottom-anchored Ghost transport.
+3. Incoming — observed relationships: citations in, reactions, and any later inbound type. Each carries a freshness state; counts never claim completeness.
+4. Material content plus span-bound annotations.
+5. Citations Out.
+6. Bottom-anchored Ghost transport.
 
-The voice and relationship lists are part of the scrollable authored artifact or its fixed edge—not hidden in a separate provenance dashboard. Long lists collapse to counts and expand in place.
+The voice and relationship lists are part of the scrollable authored artifact or its fixed edge—not hidden in a separate provenance dashboard. Long lists may collapse in place, but reactions always retain named identities and never reduce to a count.
 
-For a folder, the four lists describe the folder artifact itself. Descendant totals are expandable roll-ups and must not be flattened into folder-level provenance.
+For a folder, the three lists describe the folder artifact itself. Descendant citation totals are expandable roll-ups and must not be flattened into folder-level provenance; reactions remain identities with freshness.
 
-Incoming citations are observed relationships and require a freshness state such as current, stale/offline, or unavailable. Counts must never claim global completeness. Outgoing citations are authored references carried by the resource. Attestations are explicit warranties over an exact Step or issue.
+Incoming relationships are observations and require a freshness state such as current, stale/offline, or unavailable. Counts must never claim global completeness. Outgoing citations are authored references carried by the resource.
 
 ## Tab-Local Ghost Transport
 
@@ -919,6 +944,8 @@ Folder projections have different ordering claims:
 
 The active projection is always labeled next to playback so Stack is never mistaken for chronology.
 
+**A folder has exactly one Stack.** Membership is exclusive and ordered once, so the authored order is the Stack and there is nothing for a second one to order. The consequence is worth stating because it is not obvious: a work appears in exactly one authored ordering, ever. Ordering the same works differently in two places is ordering by reference rather than containment, which folders cannot express — a zine is already the ordered-list-of-references resource, and extending that is the cheaper path if the need ever becomes real. It is not built now.
+
 ```mermaid
 sequenceDiagram
     participant U as Writer or reader
@@ -961,7 +988,7 @@ The two visible essay panels are explicitly labeled Write and Read views of the 
 
 ## Publication and Disclosure
 
-Capture, AI authorization, publication, and warranty attestation are separate decisions.
+Capture, AI authorization, and publication are separate decisions.
 
 Capitalization is semantic: **Zine** is the instrument; a **zine** is a published artifact with stable identity, a name, an ordered set of issues, share records, and zine-level tombstone/revocation status.
 
@@ -971,10 +998,10 @@ An **issue** is one immutable publication of exactly one zine. It resolves to on
 
 - material text;
 - selected Ghost spans;
+- `ghost_disclosure: complete | selected` — whether the disclosed Ghosts are every substantive one for this Step or a chosen subset. Signed with the manifest. `complete` is meaningful only relative to the pinned promotion receipt: it means every Ghost above that issue's floor, under that issue's `N` and `K`. Because those parameters are adjustable and reproject the whole corpus, a `complete` at a high floor and one at a low floor differ enormously, and a reader will read the word as *everything*. The threshold must therefore be **legible to the reader**, not merely pinned in the manifest — the same standard already applied to suppressed voice attribution, where absence must declare itself;
 - selected ordering and Step metadata;
 - disclosed voice attribution and its appearance map;
 - citations;
-- attestations; and
 - permitted non-biometric playback timing, such as disclosed Step spacing or explicitly synthetic pacing.
 
 It excludes by default:
@@ -994,8 +1021,6 @@ Ghosts and voice attribution have different disclosure defaults, and the differe
 - **Two toggles, two meanings.** The reader-side control is a session-scoped display layer like the Ghost layer and has no disclosure implication. The author-side control is a disclosure act recorded in the manifest.
 - **Freeze-time disclosure check.** Freeze reports model-voiced runs that no human edit has touched since insertion: *this issue contains N words of model-authored text you have not revised.* It warns and never blocks.
 
-An **attestation** is an optional signed warranty over a Step or an issue. Publishing does not attest, and attesting does not publish. Freezing an issue with no optional warranty attestation is the ordinary case. The automatic NIP-03 record warrants only the Step event's upper time bound; it is not a content or authorship warranty.
-
 The publication command is **Publish**, never Send. An issue is a persistent artifact that readers fetch; `Send` already means transmitting an authorized prompt to a model in the same interface. Publish comprises two operations that remain distinct even when one dialog invokes both:
 
 - **Freeze** — take the selected Step and disclosure manifest, build the content-addressed issue bytes, and append the issue to one zine. Local and deterministic. A frozen issue may remain unshared indefinitely; its encrypted freeze record may ride ordinary Tier 1 private backup, but no publication relay event, public locator, or reader reachability exists until Share.
@@ -1007,19 +1032,43 @@ Eric's issue must work without an account and begins in clean-text mode. One pla
 
 ### Nostr Publication
 
-An issue is published as a [NIP-23](https://github.com/nostr-protocol/nips/blob/master/23.md) long-form event (kind `30023`). The [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md) addressing rule matches the zine model: addressable events are identified by `(pubkey, kind, d-tag)`, so the `d` tag is the zine identity and each publication is an issue with its own permanent event ID.
+An issue is published as a [NIP-23](https://github.com/nostr-protocol/nips/blob/master/23.md) long-form event (kind `30023`). Addressable events are identified by `(pubkey, kind, d-tag)` under [NIP-01](https://github.com/nostr-protocol/nips/blob/master/01.md), and **the `d` tag is the issue identity, not the zine identity.**
+
+This is the conventional reading of NIP-23, where `d` identifies an article and replaceability exists so an author can revise that article in place. Issues in a numbered run are not revisions of one another, so publishing them at a shared address would assert a relationship that does not exist — and would make every issue supersede the last. Because issues are immutable, Zine never republishes at an existing `d`; the replaceability the kind offers goes deliberately unused.
+
+The consequence is that **nothing is ever superseded**, so third-party relays retain back issues by ordinary behavior and a citation to any issue resolves for a third party who holds none of its bytes. Citation durability is therefore transitive rather than holder-only, and no relay requires a non-default retention policy.
+
+The zine address is a separate small **index event** listing its issue IDs in order — the published form of the ordered append-only list a zine already is. It is the one publication object that genuinely changes, so it is the only one that legitimately takes a replaceable address. A Zine-aware client resolves it to *latest issue*; a generic client shows nothing useful there, which is accepted: what people share is a piece, and every piece renders correctly at its own permanent address.
 
 The issue remains Zine's immutable content-addressed artifact. **The** `30023` **event is one distribution of it, not the artifact itself**—otherwise the immutability guarantee would be delegated to a replaceable event kind.
 
 - Material text goes in `content` as the exact Markdown bytes, with `d`, `title`, `summary`, `published_at`, and topic tags. Nostr Share validates NIP-23's additional constraints—no raw HTML and no arbitrary hard-wrapped paragraphs. Because Zine has no publication converter, incompatible source is reported at exact locations and must be changed by an authored edit; Share never rewrites it silently.
-- **Ghosts never go in** `content`**.** A raw client would render `(( ))` as literal prose. Ghosts, the disclosure manifest, voice attribution, appearance map, and attestation references live in one referenced Zine bundle event pointed to by an event-reference tag. Raw clients ignore the additive data and show clean prose; a Zine-aware client makes one extra fetch.
+- **Ghosts never go in** `content`**.** A raw client would render `(( ))` as literal prose. Ghosts, the disclosure manifest, voice attribution, appearance map, and NIP-03 timestamp-proof references live in one referenced Zine bundle event pointed to by an event-reference tag. Raw clients ignore the additive data and show clean prose; a Zine-aware client makes one extra fetch.
 - Markdown cannot express voice attribution, so a raw client shows undifferentiated prose. To keep the default-on promise from evaporating off-platform, the article carries a closing line linking to the full Zine reader.
-- Relays may discard superseded addressable events. Peter's relay must retain superseded event IDs, and the HTTPS reader is the authoritative archive. Third-party relays provide reach, not preservation.
+- No issue is ever superseded, so no relay needs a non-default retention policy and stock relay software is sufficient. The HTTPS reader remains the authoritative archive — third-party relays provide reach, not a preservation guarantee — but back issues no longer depend on it, because an unsuperseded event is retained by ordinary relay behavior. Only the zine index event is replaceable, and losing an older copy of it costs nothing: it is a pointer, rebuildable from the issues it names.
 - Check encoded size at publication time and warn explicitly rather than letting a relay reject silently.
 
-Supporting protocols are NIP-19 and NIP-21 (`naddr`, `nevent`, and `nostr:` links), NIP-05 (identity), NIP-65 (relay lists), kind `0` (profile), NIP-42 (relay authentication), NIP-44 (encryption), NIP-03 (Step attestation), NIP-84 (highlights as citations), and Blossom (blobs). NIP-59 gift wrap is worth evaluating for reducing checkpoint-rhythm metadata exposure.
+Supporting protocols are NIP-19 and NIP-21 (`naddr`, `nevent`, and `nostr:` links), NIP-05 (identity), NIP-65 (relay lists), kind `0` (profile), NIP-42 (relay authentication), NIP-44 (encryption), NIP-03 (Step attestation), NIP-25 (reactions), NIP-84 (highlights as citations), and Blossom (blobs). NIP-59 gift wrap is worth evaluating for reducing checkpoint-rhythm metadata exposure.
 
 Zine-specific kinds occupy a documented contiguous block, using addressable kinds only where the object is intentionally replaceable. Allocation is checked against the current NIP registry before Gate 2a signed-event schemas freeze; kinds are not scattered or chosen from numbers likely to be standardized.
+
+### Reactions
+
+A reaction is a [NIP-25](https://github.com/nostr-protocol/nips/blob/master/25.md) kind-7 event targeting a published issue. Zine both emits and receives them, and defines no concept of its own — reactions are protocol-standard and will accrue on published events whether or not Zine displays them. Refusing to show them is blindness, not discipline.
+
+The static no-account reader remains read-only and signs nothing. Zine emits reactions only through an identity-capable authoring host; the reader displays verified reactions it can reach.
+
+A consequence worth stating: because reading requires no account and signs nothing, **a kind 7 is the only act that puts a reader's identity on the record.** Reacting is therefore a disclosure about the reader, not merely a signal to the author — it is publicly queryable by anyone, permanently, and it is the one place where reading becomes attributable. The emitting interface should read as publication rather than as a lightweight gesture.
+
+**Content is one grapheme cluster**: an emoji, or a single character. Not one scalar — an emoji may be several scalars joined by zero-width joiners, and the constraint is on what a reader perceives as one mark. Empty content reads as `+`, per the NIP.
+
+Arbitrary single characters are permitted and intended. A `?` or a `†` beside a paragraph reads as a reader's mark rather than as approval, which suits an editorial instrument better than a thumbs-up does. Other clients render unfamiliar characters as literal text, which is acceptable.
+
+**Received reactions show identities, never counts.** They are reachable observations from whichever relays answered, subject to the same rule as incoming citations: counts must never claim global completeness. Three named readers is information; "3" is a scoreboard.
+
+Reactions feed nothing. They never rank, order, or filter work; they never enter Reflection; they never enter AI context. Display only.
+
+A reaction targets a whole issue. A reader's mark on a specific passage is an annotation with an external voice — the existing annotation type, anchored to a span, arriving from outside rather than authored locally. Do not build a second span-scoped reaction mechanism; annotations already carry voice, anchor, and disclosure.
 
 ## Prompts
 
@@ -1048,7 +1097,7 @@ The implementation should begin with separable packages or modules even if shipp
 
 - **trace-core** — event schemas, validation, causal ordering, integrity, and migrations;
 - **upcasters** — pure stored-version-to-current-version lifts plus the permanent golden schema corpus;
-- **reducers** — CommonMark material, folder membership/order, Ghost promotion/disposition, annotations, citations, voices, and attestations;
+- **reducers** — CommonMark material, folder membership/order, Ghost promotion/disposition, annotations, citations, reactions, voices, and timestamp observations;
 - **storage** — SQLite journal, signed event store, snapshots, indexes, authored relay outbox, witness-maintenance outbox, export, and recovery;
 - **replication** — encrypted Nostr authored-object ingest/outbox, target-linked witness observations, frontier reconciliation, event validation, and blob availability;
 - **workspace** — navigation rail, directory, panels, tabs, view state, and action palette;
@@ -1062,7 +1111,7 @@ The implementation should begin with separable packages or modules even if shipp
 - **nostr-reader** — identifier resolution, verified event storage, bounded reference traversal, inert rendering, exact spans, and address-pointer drift;
 - **interop** — pathless MCP press, first-class Codex/Claude adapters, explicit import/export, and conformance gates;
 - **publish** — issue manifests, voice disclosure, Prompts/answers, NIP-23 distribution plus referenced evidence bundles, static/no-account reader, and selective disclosure; and
-- **crypto-integrity** — keys, signatures, attestations, and verification boundaries where required.
+- **crypto-integrity** — keys, signatures, timestamp proofs, and verification boundaries where required.
 
 The UI must consume projections and commands. It must not mutate reduced state directly.
 
@@ -1127,7 +1176,7 @@ Tier 1 encrypts every private Commit-manifest, Trace-Packet, and Step-event cont
 From Gate 2a, a Commit freezes the ordered journal actions and discrete events created since the prior Commit into one signed manifest plus its named object set. Before Gate 2a, the corresponding triggers create durable unsigned journal/snapshot checkpoints only. Commits occur:
 
 - when the writer creates a semantic Step;
-- before Search over dirty scope, sync, export, AI transmission, publication, or attestation;
+- before Search over dirty scope, sync, export, AI transmission, or publication;
 - on document lifecycle transitions `visibilitychange → hidden` and `pagehide`, through a storage path that completes without relying on unload-time asynchronous work; and
 - automatically when either 2,000 encoded actions or 64 KiB of canonically encoded uncovered action payload is reached, whichever comes first.
 
@@ -1180,8 +1229,8 @@ Indexes should support:
 - Ghost events by anchor and visibility;
 - Ghost disposition/retry inputs and active projection membership;
 - annotations by material/Ghost anchor, voice, and disclosure;
-- citations in and out;
-- attestations by target Step or issue;
+- incoming relationships by target, kind, identity, and freshness;
+- outgoing citations;
 - voice runs by resource; and
 - publication disclosure membership; and
 - full-text search across material, Ghost, commentary, and source content, filterable by resource, layer, voice, Step, and kind.
@@ -1194,7 +1243,7 @@ Zine files and folders are stable trace resources, not required operating-system
 
 The structured agent interface is:
 
-- a pathless MCP press exposes list, read, history, exact-node, typed mutation, Step, zine, issue-freeze, issue-share, cite, attest, Ghost, inline-reader, and conversation operations; the user-facing Publish command composes Freeze and optional Share without collapsing their receipts;
+- a pathless MCP press exposes list, read, history, exact-node, typed mutation, Step, zine, issue-freeze, issue-share, cite, Ghost, inline-reader, and conversation operations; the user-facing Publish command composes Freeze and optional Share without collapsing their receipts;
 - every mutation names stable resource IDs and expected heads, then uses compare-and-swap; model material actions are atomic attributed writes rather than pending proposals;
 - first-class Codex and Claude adapters add provider/session events and preserve native approvals where observable; and
 - unsupported or external harnesses remain bounded outside-in MCP contributors rather than being credited with complete session capture.
@@ -1211,11 +1260,11 @@ Codex, Claude Code, and MCP compatibility must pass a real harness suite before 
 
 Signed events cannot be rewritten, and unsigned journal records and logical Step landmarks are likewise append-only; the schema will nonetheless change. The migration mechanism is **upcasting**, which never touches stored bytes. Gate 2a Step promotion creates new signed event objects that reference frozen logical Step IDs—it is not an upcast and does not mutate the preexisting journal records.
 
-Every event carries `schema_version`. On read, a chain of small pure functions lifts an event from its stored version to the current one, in memory, before any reducer sees it. The stored event remains exactly as signed—same bytes, ID, signature, and attestation, verifiable forever. Reducers know only the latest in-memory schema.
+Every event carries `schema_version`. On read, a chain of small pure functions lifts an event from its stored version to the current one, in memory, before any reducer sees it. The stored event remains exactly as signed—same bytes, ID, and signature—and any linked NIP-03 proof remains verifiable forever. Reducers know only the latest in-memory schema.
 
 Version-dispatching reducers are rejected because they accumulate branches for every schema ever shipped and become unmaintainable.
 
-**Frozen permanently:** event identity scheme, canonical text encoding, signature scheme, and Nostr tuple construction. There is no upcaster for identity; changing any of these invalidates attestations and citations already held.
+**Frozen permanently:** event identity scheme, canonical text encoding, signature scheme, and Nostr tuple construction. There is no upcaster for identity; changing any of these invalidates NIP-03 proofs and citations already held.
 
 **Upcastable:** added fields with defaults, renames, removal of unused fields, and deterministic splitting of one stored event into multiple current in-memory records.
 
@@ -1232,11 +1281,10 @@ The failure this prevents is not merely “users cannot upgrade.” It is **“I
 - Local capture does not imply AI use.
 - AI use does not imply publication.
 - Publication does not imply disclosure of the full trace.
-- Publication does not imply optional warranty attestation, and attestation does not create a zine or issue.
+- Publishing carries the author's identity signature over exactly the frozen issue bytes and disclosure manifest. There is no separate act by which an author warrants their own work. A statement by another party is that party's signed event: a substantive one is a zine citing yours and arrives as an incoming citation; a bare one is a reaction.
 - Human-reader issues and model-reader context use the same disclosure engine but never the same grant implicitly; each freezes its own audience, purpose, evidence set, and receipt.
-- Incoming citation counts are reachable observations, not global facts.
+- Incoming relationships are reachable observations, not global facts.
 - Voice attribution states who or what the trace claims acted; it is not automatically proof of legal identity.
-- Optional warranty attestation is an explicit signed statement over an exact Step or issue. NIP-03 is a narrower timestamp attestation and makes no content warranty.
 - Authored action ordering uses sequence and causality, not wall-clock time. Fine-grained authored actions carry no wall-clock timestamps. Default-on native timing lives only in the separate biometric store. A synced Commit necessarily exposes its second-resolution Nostr `created_at`, packet volume, and relay arrival, so relay use discloses approximate checkpoint rhythm and change volume even when payloads are encrypted.
 - Prompt Inspector must show exactly which Ghost spans and material text will be sent before execution.
 - Model commentary and annotations are untrusted attributed input. They cannot enter the directive segment, invoke tools, mutate material, or broaden the next reader projection merely because they live inside the file. A model material result mutates only through its already authorized, validated Append or Rewrite action; once inserted, its text carries voice but no tool or instruction authority.
@@ -1256,7 +1304,7 @@ Resistance compounds with corpus continuity and cross-reference density, not wit
 Desktop-first authoring removes the per-load VPS code-delivery problem that made an external signer mandatory. The installed Tauri host owns key custody through native adapters; the shared webview frontend never receives raw key bytes.
 
 - **Device key.** From Gate 2a, each desktop install creates and holds one device key. It signs trace and Tier 1 Commits for that install only.
-- **Identity key.** From Gate 2a, Peter's identity key lives in the OS keychain. It signs the Tier 1 sole-writer binding, later zine/issue freeze records, attestations, and durable-identity manifests, and participates in NIP-44 decrypt/rehydration through the native custody adapter. A freeze signature authenticates the publisher and bytes; it is not an optional warranty attestation.
+- **Identity key.** From Gate 2a, Peter's identity key lives in the OS keychain. It signs the Tier 1 sole-writer binding, later zine/issue freeze records, completed kind-1040 timestamp events, and durable-identity manifests, and participates in NIP-44 decrypt/rehydration through the native custody adapter. A freeze signature authenticates the publisher and exact issue bytes; there is no second self-warranty act.
 - **Provider account session.** Gate 1 enables both Codex/ChatGPT and Claude through each provider CLI's existing account login. Zine has no API-key or provider-token capability: it never reads, copies, persists, returns, logs, or exposes either provider token. Every outbound request requires a native confirmation showing the exact private writing and Ghost evidence to be sent. An unavailable account session fails closed with no automatic login, API-credit, API-key, keychain, or billing fallback; API-key support is deferred unless later need justifies a separately reviewed authentication mode.
 - **Biometric custody.** From Gate 2b, raw timing and enrolled models live in encrypted native storage. The wrapping key or non-exportable handle lives in the OS keychain; the model blob does not need to fit in the keychain.
 
@@ -1265,7 +1313,7 @@ NIP-07 and NIP-46 remain supported paths for people who prefer an external or re
 Rules:
 
 - The pure trace kernel contains no code path that reads identity-key material. It passes canonical bytes and an operation class to a native custody capability. Where the platform supports a non-exportable signing handle, use it; otherwise the custody adapter minimizes and zeroizes process exposure.
-- Device keys can sign trace only. They can never sign issues or attestations or expand device authority.
+- Device keys can sign trace only. They can never sign issues or expand device authority.
 - Gate 2a identity bootstrap creates the sole-writer binding naming the install's device key, NIP-44 envelope version, allowed Commit classes, and starting frontier.
 - Gate 4 migration preserves every earlier event identity. Its first manifest epoch adopts the binding at a named frontier, then may authorize replacement or additional writers; it never re-signs old actions.
 - Tier 1 rehydration on another desktop requires access to the same identity key, through OS-keychain transfer/import or optional NIP-46 custody, and remains read-only. Gate 2a onboarding must verify an offline identity-recovery path; the app cannot call rehydration durable if loss of one machine also loses the only decrypting key.
@@ -1306,7 +1354,7 @@ Rules:
 2. Ghost text displays as removed source bytes, never as rendered markup.
 3. Both Text and Ghost layers cannot be hidden simultaneously.
 4. The deletion afterimage never delays or alters the underlying edit, and its animation timing never enters the authored event set.
-5. Voice, citations-in, content, citations-out, attestations, and transport appear in the same order for every resource tab.
+5. Voice, Incoming, content, Citations Out, and transport appear in the same order for every resource tab.
 6. Voice rendering never encodes human-versus-machine. Typeface carries author-versus-other, colour carries identity, the margin carries the name; appearance settings adjust identity only, never the binary.
 7. Voices interleave but never merge; every surviving material run and every Ghost retains its authored voice identity.
 8. Folder playback never mutates unrelated tabs or recalls workspace geometry.
@@ -1332,7 +1380,7 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 3. Keystroke- or action-frequency authored operations never reach a relay or peer. Private authored trace leaves only as a complete signed Commit object set.
 4. Only one device may create Commits until multi-device authoring ships; every other profile is read-only. A Commit-capable device behind the synced head is read-only until it catches up.
 5. Read-only replicas may upgrade and store target-linked witness observations without creating a Commit or advancing an authored head.
-6. Tier expansion never repacks or re-signs history. Device keys sign trace only and can never sign an issue or attestation; the pure kernel and frontend contain no identity-key read path.
+6. Tier expansion never repacks or re-signs history. Device keys sign trace only and can never sign an issue; the pure kernel and frontend contain no identity-key read path.
 7. Synced state is the deterministic reduction of the validated authorized event union. Non-overlapping heads commute under position identity; overlapping heads remain branches until an authored merge.
 8. Authorization evidence is graded, not binary: a self-manifest chain yields `local-valid / identity-unattested`; missing predecessors yield `authorization-unknown`; history behind an advertised head is `partial`.
 9. Folder membership is always authored. Query results enter an inbox and require an authored promotion event.
@@ -1342,7 +1390,7 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 ### Disclosure, Witness, and Claims
 
 1. An issue resolves to one exact Step and immutable disclosure manifest and belongs to exactly one zine. Revocation and tombstone status live at the zine level; withdrawing Share changes reachability, never frozen bytes.
-2. Publishing does not attest and attesting does not publish. Freeze, Share, and warranty attestation are independent acts even when one dialog offers them together.
+2. Reactions are protocol-standard inbound observations. They render as identities with freshness, never as counts, and never rank, order, filter, or enter Reflection or AI context.
 3. Voice attribution renders by default in an issue; suppression is itself disclosed.
 4. A published issue renders as a complete, correct, clean article in a client that understands no Zine-specific tags or referenced events.
 5. Fine-grained authored actions contain no wall-clock timing. Native key-down/up timing lives only in the separate encrypted biometric stream and never enters Commits, AI context, ordinary exports, or issues. Raw timing is never publishable; only derived scores may be disclosed. Disabling biometric capture never disables writing, trace, Ghosts, Commits, or sync.
@@ -1377,7 +1425,6 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 - Same file open live and historically in different tabs.
 - Starting a second active transport.
 - Offline or stale incoming citation observations.
-- Revoked attestation still present in an older immutable issue.
 - AI scope changes after request preparation but before execution.
 - Ghost payload contains literal nested delimiters or directive-looking text.
 - A Ghost tree branches rather than forming one linear replacement chain.
@@ -1396,7 +1443,9 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 - Ghost, commentary-annotation, and voice-name margins collide at the same span in a narrow panel.
 - Two voices receive near-identical configured colours.
 - An issue suppresses voice attribution or contains untouched model-voiced runs.
-- A `30023` Share exceeds a relay limit, contains raw HTML or hard-wrapped paragraphs, or supersedes a prior issue at the same zine address.
+- A `30023` Share exceeds a relay limit or contains raw HTML or hard-wrapped paragraphs.
+- A `d` allocation collides with an existing issue of the same zine, which would silently replace an immutable issue and must fail closed before signing.
+- A zine index event is fetched in an older copy than the issues a client already holds, or names an issue no configured relay can serve.
 - An `naddr` citation's current target changes after Zine stored a concrete event ID.
 - An unknown event kind contains hostile markup, nested `nostr:` references, or remote media.
 - The same signed Commit manifest, Trace Packet, or discrete event arrives independently through several relay mirrors.
@@ -1437,7 +1486,7 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 - Retry fixtures prove a Ghost chain of depth at least two becomes `RETRIED` without similarity computation; near-anchor shingle matching respects window and minimum length; and cross-file semantic detection catches paraphrase without firing on unrelated passages that merely share vocabulary. Embedding caches are immutable and keyed by model version.
 - `DECLINED` + `RETRIED` survives context-budget pruning that removes lower-value Ghost nodes. A third materially similar model result produces a `constraint_refused` receipt and no action-stream mutation, pending proposal, or duplicate Ghost.
 - Prompt evidence/instruction boundary tests proving bare `((...))` never grants authority and only an explicitly approved typed directive node enters the instruction segment.
-- Key-tier tests prove a device key cannot sign an issue, attestation, or authority expansion; the pure kernel and frontend expose no identity-key read path; and native custody signs only canonical bytes under the requested operation class. Optional NIP-07/NIP-46 adapters pass the same capability contract.
+- Key-tier tests prove a device key cannot sign an issue or authority expansion; the pure kernel and frontend expose no identity-key read path; and native custody signs only canonical bytes under the requested operation class. Optional NIP-07/NIP-46 adapters pass the same capability contract.
 - Minimal-citer tests resolve identifiers, verify signatures and recomputed IDs, store exact tuples, create exact-span citations, and survive relay removal. An `naddr` stores its resolved concrete `nevent`; source republication does not retarget the citation, and the moved address pointer is surfaced.
 - Unknown-kind tests prove a verified event remains storable and citable, renders as labeled inert content and tags, and cannot execute active markup. Embedded `nostr:` traversal stops at the hard depth limit; remote media remains unfetched unless proxied or explicitly enabled.
 - Search-rebuild tests delete the FTS5 projection, rebuild it from the same event set, and reproduce identical matches, snippets, BM25 order, and canonical tie order across material, Ghost, commentary, and source layers.
@@ -1461,13 +1510,15 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 - Profile fixtures prove provisional/established labeling, origin and hardware cohorts, model-version receipts, score-only disclosure, and failure of a tampered model against its committed hash.
 - Reflection tests prove every metric is a pure deterministic projection and running or viewing it creates no event, biometric record, or state mutation.
 - Journal property tests cover torn length prefixes, corrupt checksums, predecessor-hash breaks, lost commit markers, segment rollover, journal-verified and commit-verified snapshot replacement, compaction interruption, and recovery of the longest valid prefix. A journal-verified snapshot fails if replay or its covered frontier disagrees; a commit-verified snapshot also fails on any missing or invalid signed object.
-- Upcaster tests retain every shipped schema fixture, lift each stored event through every intermediate version into the current reducer, and assert expected state while original bytes, ID, signature, and attestation remain unchanged. An un-upcastable fixture can only create a separately dated corpus with a signed lineage link; it is never re-signed in place.
+- Upcaster tests retain every shipped schema fixture, lift each stored event through every intermediate version into the current reducer, and assert expected state while original bytes, ID, and signature remain unchanged and linked NIP-03 proofs remain verifiable. An un-upcastable fixture can only create a separately dated corpus with a signed lineage link; it is never re-signed in place.
 - Prompt tests publish a prompt as an ordinary short zine issue, publish answering zines with concrete citations, and resolve “who answered?” through the standard citation-tag query. Republishing the prompt address never retargets an existing answer's concrete citation.
 - Before Gate 2a, automatic size, lifecycle, and operation checkpoints never create semantic Steps. From Gate 2a, automatic size, lifecycle, sync, and operation Commits never create semantic Steps or alter Step transport ordering. Witness-maintenance retries create no Commit at all.
 - Disclosure tests proving excluded events cannot appear in AI or public projections.
-- Zine/publication tests prove Freeze is local and deterministic; a frozen-but-unshared issue leaves no publication-relay event or locator and remains reader-unreachable even if its freeze record is encrypted in Tier 1 backup; each issue belongs to exactly one zine; Share makes the same bytes reachable; withdrawing Share or tombstoning the zine changes reachability/status without mutating the content address; and publishing neither creates nor implies an optional warranty attestation.
-- A NIP-23 client that ignores every Zine-specific tag and referenced event renders a complete clean article with correct headings and links and no Ghost or notation artifacts. Issue 2 leaves issue 1 retrievable by permanent event ID from Peter's relay and HTTPS archive even if other relays retain only the latest addressable event. Nostr Share reports oversize output and refuses source that violates the pinned NIP-23 Markdown constraints rather than rewriting bytes.
+- Zine/publication tests prove Freeze is local and deterministic; a frozen-but-unshared issue leaves no publication-relay event or locator and remains reader-unreachable even if its freeze record is encrypted in Tier 1 backup; each issue belongs to exactly one zine; Share makes the same bytes reachable; withdrawing Share or tombstoning the zine changes reachability/status without mutating the content address; and `ghost_disclosure` is signed as `complete` or `selected` in the manifest.
+- A NIP-23 client that ignores every Zine-specific tag and referenced event renders a complete clean article with correct headings and links and no Ghost or notation artifacts. Publishing issue 2 allocates a distinct `d` and leaves issue 1 addressable and unmodified on stock relays with no retention configuration; a third party holding none of issue 1's bytes can still fetch and verify it after issue 2 exists. The zine index event replaces its prior copy, and a client that has only the newer index still resolves every issue it names. Nostr Share reports oversize output and refuses source that violates the pinned NIP-23 Markdown constraints rather than rewriting bytes.
 - Voice-disclosure tests prove an unsuppressed issue includes the required appearance map and an explicit full-reader link; a suppressed issue declares suppression; a reader cannot confuse suppression with an all-authorial issue; and Freeze accurately reports untouched model-voiced word count after partial human revision.
+- Reaction tests prove emission creates a valid NIP-25 kind-7 event with correct target tags and content containing exactly one grapheme cluster; a multi-scalar emoji is accepted, a multi-grapheme string is rejected at composition, and empty content reduces to `+`. Received reactions render named identities with freshness and no count anywhere in the UI. No reaction reaches Reflection, AI context, ranking, ordering, or filtering.
+- Third-party-statement tests store a substantive statement about an issue as a verified source referenced by citation. Its withdrawal changes freshness only and never mutates a citing resource or frozen issue. A span-specific external mark reduces to the existing externally voiced annotation type, never a reaction.
 - Step fixtures prove Gate 0/1 landmarks have stable logical IDs, order, affected heads, and journal frontiers; settle Ghosts; drive Search and playback; and survive export/import without a signer or Nostr event ID. Gate 2a fixtures promote every retained landmark exactly once, preserve every logical reference and ordering relation, freeze its covered journal range, and assign a signed Step event whose `created_at` is the actual promotion checkpoint.
 - Gate 2b OTS fixtures prove every promoted or natively signed Step event binds its ordered Trace Packet IDs and `action_root`; its Commit manifest references that event ID, matches the `action_root`, and covers it in `object_set_root`; the calendar receives that exact event ID as its digest; pending commitments persist locally and in the encrypted maintenance outbox without a kind-1040 event; background upgrade retry is idempotent; a clean read-only rehydration desktop can resume upgrade without creating a Commit; the completed kind-1040 payload contains a Bitcoin attestation and no pending attestation; the self-contained proof verifies with stock OTS tooling; and a forged or mismatched Step event fails. Verification and product metadata report an upper bound rather than an exact creation time and state that a promoted Step's proof does not time-bound its original unsigned landmark. Reproduce and pin the known attack behind the current NIP-03 `unrecommended` status before calling the adapter Supported.
 
@@ -1516,10 +1567,10 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 - Ghost margin tests prove expanding, hiding, threshold-changing, and replaying evidence never reflows material text.
 - Raw/hybrid editor tests prove rendered-line margins remain anchored to source position identities through headings, lists, emphasis, links, and mode changes.
 - Voice legibility survives every appearance configuration, including two near-identical colours: metrically compatible typeface and on-demand margin name still distinguish the voices.
-- Screen-reader labels for Step, play state, scope, voices, citations, and attestations.
+- Screen-reader labels for Step, play state, scope, voices, citations, and reactions.
 - Color is never the only carrier of voice, origin, Ghost, or playback state.
 - Focus remains inside the invoking tab during transport use.
-- Narrow panels collapse metadata lists without hiding their counts.
+- Narrow panels collapse metadata lists without hiding required relationship state; reactions retain named identities and never become a count.
 - Reduced-motion mode disables continuous playhead animation but preserves state changes.
 - Public issue works without authentication on desktop and mobile widths.
 
@@ -1622,6 +1673,7 @@ These capabilities strengthen provenance and observation but do not protect the 
 
 - Ship the static no-account reader as the shared frontend in projection-only mode.
 - Freeze an immutable issue from an exact Step and disclosure manifest; Share it as a NIP-23 kind-`30023` distribution plus one referenced evidence bundle under an explicit reader scope.
+- Emit and receive NIP-25 reactions against published issues; render received identities with freshness and never counts, rankings, or downstream feeds.
 - A raw NIP-23 client renders correct clean Markdown without fetching the bundle.
 - Verify that Peter's relay and HTTPS archive retain every issue by permanent event ID; that withdrawing Share or tombstoning a zine changes reachability without changing bytes.
 - Eric may receive the clean-first issue under the fixed optional entry contract. Discoverability, comprehension, and usefulness are recorded separately. A miss is classified, never collapsed. His response is explicitly directional.
@@ -1663,7 +1715,7 @@ These are depth milestones, not demand gates. Another writer's adoption may just
 1. **Gates 0 and 1 — The writing loop.** Native Tauri desktop, CommonMark editor with raw and hybrid modes, single-writer position identity, exact capture, logical Steps, Ghost promotion and disposition, the afterimage and evidence margin, four model actions through constrained Codex and Claude account-session adapters, local Search, conversations and citations, the minimal Nostr citer, native SQLite journal with crash recovery, and journal-verified export. The separately compiled private web-author target proves OPFS SQLite/WebCrypto custody, offline recovery/export, `WEB_MEDIATED` input, and identical golden-corpus reduction without becoming a writer for the desktop corpus. No networking beyond one explicitly authorized model request, configured relay reads for the citer, and updates.
 2. **Gate 2a — Durability and signing.** Signed Commits and packets, Step promotion, keychain custody, NIP-44, Tier 1 push and read-only rehydration, and the active-capability egress allowlist. This gate alone is exempt from the three-cycle lock.
 3. **Gate 2b — Anchoring and biometrics.** After three substantive cycles: independent witness receipts, per-Step OTS, its security spike, native input, and biometric storage.
-4. **Gate 3 — First issue.** Static reader, Freeze and Share, NIP-23 distribution, Eric.
+4. **Gate 3 — First issue.** Static reader, Freeze and Share, NIP-23 distribution, NIP-25 reactions, Eric.
 5. **Gate 4 — Multi-device authoring.** Manifest epochs, recovery, concurrent placement, merge tab.
 6. **Gate 5 — Full tool-capable desktop AI integration.** Expand the constrained Gate 1 Codex and Claude harnesses only after the loop proof.
 7. **Gate 6 — Depth.** Folder playback, Space, Queries and inboxes, Reflection, probes and prompts.
@@ -1688,6 +1740,7 @@ These are depth milestones, not demand gates. Another writer's adoption may just
 | Writing-biometric capture and profile               | Gate 2b         | —                                  | unavailable   | unavailable for mediated input |
 | Zine creation, issue freeze                         | Gate 3          | —                                  | private authoring target; schedule demand-driven | unscheduled                    |
 | Issue Share, no-account reading                     | Gate 3          | Gate 3                             | deferred      | Gate 3 reader PWA              |
+| NIP-25 issue reactions                              | Gate 3 emit/receive | Gate 3 display                 | deferred      | Gate 3 reader PWA display      |
 | Scoped model corpus retrieval                       | Gate 3 optional | —                                  | deferred      | unscheduled                    |
 | Tier 2 multi-device authoring                       | Gate 4          | —                                  | Gate 4 earliest shared-corpus write authority | unscheduled                    |
 | Full tool-capable harness execution                 | Gate 5          | —                                  | unscheduled   | unscheduled                    |
@@ -1729,7 +1782,7 @@ Before any later mobile authoring host, executable probes must demonstrate deter
 The Gate 1 desktop authoring client, and any later authorized native authoring host, must be able to:
 
 - create, validate, reduce, export, and recover the same versioned trace format;
-- render the same material, Ghost, voice, citation, and attestation semantics;
+- render the same material, Ghost, voice, citation, reaction, and timestamp-proof semantics;
 - create and continue essay, note, folder, and conversation resources; create zines and issues when Gate 3 activates them; create verified source resources through the Gate 1 minimal citer; and add query resources only when Gate 6 activates them;
 - execute Append, Rewrite, Reply, and Quote-reply with atomic expected-head material writes, commentary-only annotations, complete attribution, and no proposal state;
 - Freeze and Share immutable issues only when Gate 3 activates those capabilities, and open and verify their disclosure manifests and zine lineage;
@@ -1741,11 +1794,11 @@ Host storage, native input, key custody, and presentation are adapters around th
 
 ### Issue Reader Contract
 
-The Gate 3 no-account reader is the shared frontend built in projection-only mode and deployed statically, not a second UI implementation. It must verify and render an immutable issue, its parent zine identity/status, disclosed Ghost tree, voices, citations, attestations, and permitted transport without opening authoring storage, generating keys, or creating, signing, exporting, or recovering private author traces. Desktop authoring and web reader modes have separate conformance suites, host adapters, and capability policies despite sharing projections and frontend components.
+The Gate 3 no-account reader is the shared frontend built in projection-only mode and deployed statically, not a second UI implementation. It must verify and render an immutable issue, its parent zine identity/status, disclosed Ghost tree, voices, citations, reactions, NIP-03 timestamp proofs, and permitted transport without opening authoring storage, generating keys, or creating, signing, exporting, or recovering private author traces. Desktop authoring and web reader modes have separate conformance suites, host adapters, and capability policies despite sharing projections and frontend components.
 
 ### Web App
 
-The public `apps/reader` application enters at Gate 3 as the static no-account reader for immutable issues. It has no authoring mode, OPFS author database, biometric capture, device key, identity key, relay outbox, private rehydration path, credentials, signing, or model APIs. It verifies disclosed issue bytes and adapts the shared tab, Ghost, citation, voice, attestation, and transport components to desktop and mobile widths.
+The public `apps/reader` application enters at Gate 3 as the static no-account reader for immutable issues. It has no authoring mode, OPFS author database, biometric capture, device key, identity key, relay outbox, private rehydration path, credentials, signing, or model APIs. It verifies disclosed issue bytes and adapts the shared tab, Ghost, citation, voice, reaction, timestamp-proof, and transport components to desktop and mobile widths.
 
 The private `apps/web-author` application is a separate compiled target, never a reader feature flag. Gate 1 proves OPFS SQLite/WebCrypto custody, offline recovery/export, private CJK Search parity, and identical reduction on an isolated local corpus. Its input is `WEB_MEDIATED` and carries no biometric claim. Interactive feature completion is demand-driven, and shared-corpus writing cannot activate before Gate 4 supplies stale-head lockout and merge.
 
@@ -1818,3 +1871,85 @@ Founder decisions:
   and Publish makes one. An issue is a published Step.
 
 No behavior, contract, or gate content changes.
+
+### Iteration 22 — Attestation Removed, Reactions Added
+
+**Verdict:** CONCEPT REMOVED, CONCEPT ADOPTED
+
+Founder decisions:
+
+- Deleted attestation. Self-attestation was a signature over an unstated proposition, and
+  publishing already signs the same bytes. A substantive endorsement is a zine citing yours; a
+  bare one is a reaction. Neither needed a concept.
+- The lifecycle removal is the real gain: attestation revocation had Zine tracking state it does
+  not control.
+- Adopted NIP-25 reactions rather than designing anything. Content is one grapheme cluster —
+  emoji or single character — and arbitrary characters are intended, because a mark beside a
+  paragraph suits an editorial instrument better than approval does.
+- Reactions render as identities with freshness, never counts, and feed nothing. The counts rule
+  follows the existing treatment of incoming citations.
+- Span-scoped reader marks are annotations with an external voice, not a second reaction type.
+- The tab anatomy's Citations In list generalizes to Incoming, absorbing reactions and any later
+  inbound type without growing.
+- Added `ghost_disclosure: complete | selected` to the manifest, answering the curation-theater
+  open question inside publication rather than through a separate act.
+
+### Iteration 23 — Folder Annotations, Following, Biometric Linkage
+
+**Verdict:** GAPS CLOSED, CONCEPT ADOPTED
+
+Founder decisions:
+
+- A folder page is a content manager over ordered membership, not authored prose. Per-member
+  rationale lives in annotations, which gain a third anchor kind — the membership entry — rather
+  than a second annotation type. Folder tabs get their own layer rule because they have no
+  material text to toggle.
+- Membership removal is typed discard evidence on the `query_rejection` pattern, not a text
+  Ghost. Edge discards need their own disposition vocabulary; `MOVED` must never render as a
+  decline, because a folder discard names a resource and, published, names its author.
+- A folder has exactly one Stack. Exclusive ordered membership means a work appears in one
+  authored ordering, ever. Ordering by reference is a zine, and is not built now.
+- Adopted following and redistribution as Gate 6: read the public kind-3 graph, never publish
+  one, keep the operational read list local, publish a blogroll zine as the outbound signal, and
+  use NIP-18 kind 6 for redistribution. The asymmetry is deliberate — consume a public graph
+  without contributing an involuntary one — and its reciprocity cost is stated rather than
+  mitigated. This closes the cold-start gap citation rendezvous cannot: pull-only discovery
+  presupposes already knowing the work exists.
+- Biometric profiles and their anchored commitments are per-identity. The linkage vector is the
+  commitment hash, not the score — two identities disclosing against the same hash are trivially
+  the same author, which would de-pseudonymize a pen name through the evidence feature itself.
+  Cross-identity comparison is prohibited rather than merely undisplayed.
+- Biometric off means purge, not pause. Crash reports and telemetry join the separation
+  boundary, since a timing buffer captured at fault time is not network traffic and would not
+  fail the egress gates.
+- `complete` in `ghost_disclosure` must surface its promotion threshold to the reader. Pinning
+  the receipt is not showing it, and a reader reads `complete` as *everything*.
+- Noted that a kind 7 is the only act putting a reader's identity on the record, since the
+  no-account reader signs nothing.
+
+### Iteration 24 — Publication Addressing
+
+**Verdict:** ADDRESSING CHANGED
+
+Founder decisions:
+
+- The `d` tag is the issue identity, not the zine identity. Publishing a numbered run at one
+  address made every issue supersede the last, which asserts a revision relationship that does
+  not exist between issues and is not what NIP-23's `d` means — there, `d` identifies an article
+  and replaceability exists so the author can revise it in place. Per-issue `d` is the
+  conventional reading; zine-as-address was the unusual one.
+- Nothing is superseded, so back issues are retained by ordinary relay behavior. The requirement
+  that Peter's relay keep superseded event IDs is dropped: stock relay software is now
+  sufficient everywhere, and the HTTPS archive stays authoritative for its own reasons rather
+  than as the sole preservation mechanism.
+- The deciding argument was transitive citation durability. Under a shared address, a third
+  party following someone's citation of a superseded issue depended on one host staying
+  reachable — the URL-rot property Zine distinguishes itself from, reintroduced one hop out.
+  The holder's copy was always safe; the reader of a citation was not.
+- The zine address becomes a small index event naming issue IDs in order — the published form
+  of the list a zine already is, and the only publication object that legitimately takes a
+  replaceable address. A generic client renders nothing useful there, which is accepted: what
+  people share is a piece, and every piece renders at its own permanent address.
+- Rejected dual-publishing both addresses. It preserves generic rendering of the zine pointer
+  at the cost of duplicating article bytes against the 64 KiB event ceiling, for an address
+  almost nobody dereferences.
