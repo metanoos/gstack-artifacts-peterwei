@@ -272,3 +272,5 @@
 {"skill":"browse","event":"completed","branch":"codex/gate-1","outcome":"success","duration_s":900,"session":"82619-1785119830","ts":"2026-07-27T02:55:15.543Z"}
 {"skill":"browse","event":"started","branch":"codex/gate1-search-privacy","session":"search-privacy","ts":"2026-07-27T04:27:54.802Z"}
 {"skill":"browse","event":"completed","branch":"codex/gate1-search-privacy","outcome":"success","duration_s":"900","session":"search-privacy","ts":"2026-07-27T04:32:07.304Z"}
+{"skill":"browse","event":"completed","branch":"codex/gate1-loop-proof","outcome":"success","duration_s":"0","session":"codex-gate1-loop-proof","ts":"2026-07-27T05:15:31.154Z"}
+{"skill":"browse","event":"completed","branch":"codex/gate1-editor-proof","outcome":"success","duration_s":1451,"session":"40384-1785127882","ts":"2026-07-27T05:15:56.198Z"}
