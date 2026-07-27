@@ -282,6 +282,8 @@ Backspace behaves like Backspace: the selected or adjacent characters disappear 
 
 Material text is **CommonMark markdown**, stored as normalized document text (UTF-8, LF line endings, no NFC/NFKC normalization). Markdown is the native format, not a serialization target: there is no separate internal document representation and no publication converter, because a converter would rewrite bytes at exactly the point where byte-exactness is warranted. “Exact” means exact UTF-8 bytes of this normalized representation, not preservation of an imported file's original encoding or CRLF byte sequence.
 
+Gate 1 includes **Simplified-Chinese authoring compatibility**, not merely the ability to store Han code points. On Peter's named desktop, Pinyin IME input, Chinese punctuation, unspaced Han prose, and mixed Chinese/Latin/emoji text must survive editing, identity assignment, recovery, export/import, conversation turns, and exact-span citation without rewriting source bytes. This is an authoring and content-language requirement; translating the English application chrome is not a Gate 1 dependency. When a document language is known, rendered material exposes appropriate `zh-Hans` metadata and uses CJK-capable fallback fonts and line breaking.
+
 The flavor is pinned to CommonMark plus a small documented extension set. Extensions erode the portability that justifies the choice and must be added deliberately, never casually.
 
 Non-standard bracket notations are prohibited in material text. `[[ ]]` is not used—it means wikilink to users with prior exposure, and it would break CommonMark. `(( ))` remains a derived prompt projection only and never appears in the document.
@@ -309,7 +311,7 @@ Rules:
 
 The exact sequence algorithm remains the blocking Gate 0 choice, but every candidate must satisfy the same observable contract:
 
-- Identity is assigned when normalized text enters the committed editor model, after an IME composition completes. Provisional composition text has no authored identity.
+- Identity is assigned when normalized text enters the committed editor model, after an IME composition completes. Provisional composition text has no authored identity. A Pinyin composition commit creates exactly one durable typed insert or replace action; composition cancellation creates none; and failed persistence restores the pre-composition durable projection without adopting provisional DOM text.
 - Every resource begins with permanent start and end sentinel IDs. They are not text, cannot be selected or tombstoned, and provide the neighbor pair for an empty file or whole-document deletion.
 - Every normalized Unicode scalar receives a stable ID derived from device stream, local action sequence, and index within the insert run. Grapheme boundaries govern user-facing selection and deletion; scalar IDs govern addressability.
 - Paste, import, and bulk insert are ordinary insert runs. Coalescing their storage never collapses their per-scalar identities.
@@ -545,6 +547,8 @@ search_index (FTS5)
 ```
 
 Metadata columns are `UNINDEXED`; filters are ordinary predicates beside `MATCH`. Equal BM25 scores break by canonical evidence identity so rebuilding cannot reorder ties. There is no second retrieval system.
+
+Search semantics must work for unspaced Simplified-Chinese prose. The Gate 1 corpus includes internal Han-substring queries and common two-character terms, not only prefixes from the beginning of one long `unicode61` token. Native SQLite, browser SQLite, and the pure reference implementation must return the same eligible evidence and canonical order for these fixtures. The tokenizer/index strategy is frozen only after this corpus passes; neither `unicode61` nor FTS5 trigram may be assumed sufficient without the two-character and mixed-script proofs.
 
 **Indexing.** A file's material is re-indexed at a durable local checkpoint. Before Gate 2a this is an unsigned journal/index transaction; from Gate 2a onward, a Search over dirty scope first creates an ordinary technical `operation` Commit, never a semantic Step, so live queries do not silently omit the current draft. Essays are expected to be small enough for full re-indexing to meet the Gate 1 search budget, and the benchmark must prove it; this avoids a separate delta-tracking state machine. Each deletion payload is indexed once by its immutable originating action and never updated. A disposable `search_membership` table selects which indexed deletion actions qualify as Ghosts under the active promotion and disposition receipts; changing thresholds or later corpus recurrence updates membership rather than indexed text. One deletion cannot appear as duplicate search hits merely because it was re-projected. Commentary and retained source tuples are likewise indexed by immutable evidence identity.
 
@@ -1362,7 +1366,8 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 - File with Ghosts but no surviving text.
 - Both display layers requested off.
 - Delete, undo, redo, then divergent edit.
-- Multi-code-point graphemes, composed Unicode, and right-to-left text.
+- Multi-code-point graphemes, composed Unicode, right-to-left text, and Simplified Chinese entered through a Pinyin IME.
+- Unspaced Han prose searched by an internal substring or common two-character term, including mixed Chinese/Latin text.
 - Large pasted deletion or replacement.
 - Anchor invalidation after structural edits.
 - File move during an active folder playback.
@@ -1422,8 +1427,9 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 - Identity preservation across rename and move.
 - Direct-membership and nested-boundary tests.
 - Delete/undo/redo and Ghost anchor tests across Unicode input.
+- Simplified-Chinese editor fixtures cover Pinyin composition updates, cancellation, commit over a selection, post-commit deletion, and persistence rejection. Provisional composition receives no identity, one committed composition creates one durable typed action, and rejection restores the pre-composition projection.
 - Ghost-tree fixtures for linear ancestry, sibling branches, delimiter escaping, whole-node budget pruning, and readable-projection round-trip to the typed source identity.
-- Gate 0 position-identity property tests cover bulk insert, import, paste, IME commit, replace, undo/redo, and tombstoned neighbors. Gate 4 adds randomized multi-head placement and merge fixtures. Together they prove deterministic placement or explicit orphaning—never fuzzy drift—and measure live-ID plus tombstone memory against the Gate 0 corpus.
+- Gate 0 position-identity property tests cover bulk insert, import, paste, Pinyin IME commit, mixed Chinese/Latin/emoji text, replace, undo/redo, and tombstoned neighbors. Gate 4 adds randomized multi-head placement and merge fixtures. Together they prove deterministic placement or explicit orphaning—never fuzzy drift—and measure live-ID plus tombstone memory against the Gate 0 corpus.
 - Promotion fixtures vary selected head, evaluation frontier, undo before/after settlement, author/model/guest voice, `N`, `K`, segmentation/normalization, and classifier version. Identical inputs and receipt produce identical evidence IDs; editions remain byte-stable after working defaults change.
 - Disposition fixtures prove delete-then-undo yields `REVERTED` and is absent from every AI and public projection; near-identical replacement yields excluded `CORRECTED`; and text cut in one file then recurring in another reprojects from `CUT` to `MOVED` without mutating an event. Editions retain their pinned earlier disposition receipt.
 - Retry fixtures prove a Ghost chain of depth at least two becomes `RETRIED` without similarity computation; near-anchor shingle matching respects window and minimum length; and cross-file semantic detection catches paraphrase without firing on unrelated passages that merely share vocabulary. Embedding caches are immutable and keyed by model version.
@@ -1433,6 +1439,7 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 - Minimal-citer tests resolve identifiers, verify signatures and recomputed IDs, store exact tuples, create exact-span citations, and survive relay removal. An `naddr` stores its resolved concrete `nevent`; source republication does not retarget the citation, and the moved address pointer is surfaced.
 - Unknown-kind tests prove a verified event remains storable and citable, renders as labeled inert content and tags, and cannot execute active markup. Embedded `nostr:` traversal stops at the hard depth limit; remote media remains unfetched unless proxied or explicitly enabled.
 - Search-rebuild tests delete the FTS5 projection, rebuild it from the same event set, and reproduce identical matches, snippets, BM25 order, and canonical tie order across material, Ghost, commentary, and source layers.
+- CJK search fixtures prove internal matches in unspaced Han prose, common two-character terms, mixed Chinese/Latin queries, and identical native/browser/reference eligibility and canonical ordering. The pinned tokenizer/index configuration must pass these fixtures rather than treating general Unicode code-point support as Chinese search support.
 - A query over dirty scope first creates an unsigned durable journal/index checkpoint before Gate 2a and one technical `operation` Commit from Gate 2a onward, then finds the current material. Neither path creates a semantic Step, duplicates an indexed row, or searches a stale draft.
 - Every deletion payload is indexed exactly once and never mutated; promotion or disposition reprojection changes only disposable Ghost membership and never duplicates or rewrites its FTS row. A hit navigates to its live anchor with current text visible, or to the orphaned-event inspector when the anchor cannot render.
 - Protected-field and excluded-region payloads are absent from the search index under ordinary, prefix, phrase, and combined-layer queries. Rebuilding after key rotation, import, or crash cannot introduce them.
@@ -1558,13 +1565,13 @@ If the difference is real, the spine is validated for the cost of an afternoon. 
 Only what the loop requires. Everything that hardens durability, replication, witnessing, or publication is deliberately deferred to Gate 2a or later.
 
 - Stable file and folder identity; deterministic reducers; normative event validation; atomic cross-resource transactions.
-- Exact CommonMark UTF-8/LF insert/delete/replace/undo capture with no Unicode normalization and no separate internal document representation.
+- Exact CommonMark UTF-8/LF insert/delete/replace/undo capture with no Unicode normalization and no separate internal document representation, including the Simplified-Chinese/Pinyin-IME authoring corpus.
 - Pin the CommonMark version and minimal extension set. Prove the source-line → rendered-line mapping and the in-text anchor walk across headings, lists, emphasis, links, and fences.
 - Choose the position-identity scheme and implement its **single-writer subset**: sentinels, per-scalar assignment, ordered traversal, tombstoning, undo/redo identity transitions, orphan resolution, and the measured memory ceiling. Concurrent placement moves to Gate 4.
 - Ghost promotion and disposition classification with a versioned classifier receipt, over the complete retained action set.
 - Local durable journal on native SQLite with longest-valid-prefix crash recovery. **Unsigned at this gate** — signing, packets, and manifests arrive in Gate 2a.
 - Unsigned durable Step landmarks with stable logical identity, ordered position, affected resource heads, and exact journal frontier. They settle Ghosts and drive Search, citations, and playback before any signed transport exists.
-- Prove FTS5 availability in the pinned native SQLite build; freeze tokenizer, prefix configuration, canonical tie-breaking, rebuild procedure, and measured re-index cost.
+- Prove FTS5 availability in the pinned native SQLite build; freeze tokenizer/index strategy, CJK internal and two-character query semantics, prefix configuration, canonical tie-breaking, rebuild procedure, native/browser parity, and measured re-index cost.
 - Append, Rewrite, Reply, and Quote-reply against a deterministic fake reader adapter, with atomic expected-target material writes and commentary-only annotations.
 - **Choose and pin the single real model-reader adapter, endpoint policy, credential class, retry semantics, and receipt schema.** This is the blocking decision for the entire thesis and closes first, not last.
 - Prototype Ghost indicators, commentary annotations, voice names, and the afterimage together at wide and narrow widths before freezing gutter behavior.
@@ -1577,7 +1584,7 @@ Deferred out of this gate: signed Commit and packet construction, signed Step ev
 Three ordered pass/fail proofs. Later proofs cannot waive an earlier one.
 
 1. **Loop proof.** Against the one real constrained adapter: all four cells execute with correct attribution and receipts; deletion produces classified Ghost evidence with disposition; local Search retrieves material, Ghosts, and commentary by phrase and prefix with layer, voice, scope, and kind filters; manual injection places selected results into a frozen request; and **Peter can point to occasions where authorized Ghost context changed what the model produced.** Stale targets fail without fuzzy retargeting; restart, retry, and cancellation never duplicate or misattribute.
-2. **Editor and storage proof.** On Peter's named desktop, the essay corpus passes single-writer position identity within its memory ceiling, unsigned logical Step identity and ordering, journal durability, crash recovery, byte-exact CommonMark round-trip, and journal-verified export/import with zero acknowledged-action loss.
+2. **Editor and storage proof.** On Peter's named desktop, the essay corpus passes single-writer position identity within its memory ceiling, unsigned logical Step identity and ordering, journal durability, crash recovery, byte-exact CommonMark round-trip, journal-verified export/import with zero acknowledged-action loss, and the Simplified-Chinese/Pinyin-IME contract: provisional composition is untraced, commit is one durable action, cancellation is none, failed persistence rolls back, and Chinese text remains exact through recovery and citation.
 3. **Conversation and citation proof.** Conversation files, explicit inline fork with preserved receipts, immutable turn and span citation, partial `EXTERNAL` import labeling, and the minimal concrete-event Nostr citer.
 
 Also in this gate: enough shell grammar to test the real reading experience; one voice per action-palette row; uniform tab anatomy and bottom Ghost transport; independent Text/Ghost layers; file playback; Prompt Inspector with frozen projection and receipt; create, find, move, and continue essays and conversations in ordinary folders.
@@ -1776,7 +1783,7 @@ Once Gate 2b activates, those installs may also resume encrypted OTS maintenance
 
 ### CI/CD and Distribution
 
-- Gate 1 CI builds Tauri desktop installers for Peter's named OS and runs the pure corpus plus native adapter suites: byte-exact CommonMark raw/hybrid mapping, single-writer position identity, Ghost promotion and disposition across voices, four-cell model actions/fork, conversations, concrete-event Nostr citation, native SQLite unsigned-journal crash recovery, Search rebuilds, journal-verified export/import, and offline reopen.
+- Gate 1 CI builds Tauri desktop installers for Peter's named OS and runs the pure corpus plus native adapter suites: byte-exact CommonMark raw/hybrid mapping, Simplified-Chinese/Pinyin-IME composition and recovery, single-writer position identity, Ghost promotion and disposition across voices, four-cell model actions/fork, conversations, concrete-event Nostr citation, native SQLite unsigned-journal crash recovery, CJK-capable Search rebuild parity, journal-verified export/import, and offline reopen.
 - Gate 1 egress tests permit only software updates, the exact authorized request to the configured model-reader endpoint, and explicit minimal-citer reads from configured relays. They prove that signing, relay writes, witness traffic, OTS traffic, biometrics, and edition Share have no reachable path. Ambient queries, journal rows, raw keys, undisclosed prompts, and undisclosed blobs fail the gate at every destination.
 - Gate 2a CI adds unsigned-Step promotion, signed Commit/packet/discrete-event construction, keychain and provider-credential separation, NIP-44 Tier 1 backup/rehydration, commit-verified export/import, and the active-capability egress allowlist. Tier 1 tests refuse a Commit from any second install instead of queuing it.
 - Gate 2b CI, after the three-cycle lock, adds native key-down/up capture, biometric isolation/off-switch behavior, signed witness receipts, OTS pending/upgrade/offline verification, promoted-Step disclosure, and the pinned witness/OTS egress expansion.
@@ -1786,4 +1793,3 @@ Once Gate 2b activates, those installs may also resume encrypted OTS maintenance
 - Desktop distribution includes signed/notarized installers, migration fixtures, a rollback-safe updater, schema/version declarations, deterministic export fixtures, and signed build provenance. Later desktop OS targets must independently pass native input and keychain conformance.
 - Web authoring is not built or tested as a dormant flag. Mobile authoring production builds begin only after a separate observed-need decision.
 - Actual signing certificates, notarization credentials, production deployment, public publishing, relay changes, and app-store submission remain external actions requiring explicit execution authorization.
-
