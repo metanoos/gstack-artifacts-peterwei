@@ -277,3 +277,7 @@
 {"skill":"benchmark","event":"completed","branch":"codex/gate1-performance-evidence","outcome":"success","duration_s":"1057","session":"15458-1785132860","ts":"2026-07-27T06:32:16.155Z"}
 {"skill":"investigate","event":"started","branch":"codex/gate-1","session":"23062-1785134137","ts":"2026-07-27T06:35:37.435Z"}
 {"skill":"review","event":"started","branch":"codex/gate-1","session":"490-1785135334","ts":"2026-07-27T06:55:34.482Z"}
+{"skill":"review","event":"started","branch":"codex/gate-1","session":"subagent-recovery-review","ts":"2026-07-27T06:57:04.541Z"}
+{"skill":"review","event":"started","branch":"codex/gate-1","session":"security-subagent","ts":"2026-07-27T06:57:26.163Z"}
+{"skill":"browse","event":"completed","branch":"codex/gate1-automated-residuals","outcome":"success","duration_s":"0","session":"browse-final","ts":"2026-07-27T11:22:51.148Z"}
+{"skill":"investigate","event":"started","branch":"codex/ui-surfaces","session":"75679-1785158188","ts":"2026-07-27T13:16:28.920Z"}
