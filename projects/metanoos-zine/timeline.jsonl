@@ -286,3 +286,8 @@
 {"skill":"investigate","event":"started","branch":"codex/gate-1","ts":"2026-07-27T14:33:40.742Z"}
 {"skill":"investigate","event":"completed","branch":"codex/ui-interaction-fixes","outcome":"success","ts":"2026-07-27T16:03:32.347Z"}
 {"skill":"investigate","event":"completed","branch":"codex/ui-app-recovery-fixes","outcome":"success","duration_s":"1200","session":"81270-1785162808","ts":"2026-07-27T16:04:00.291Z"}
+{"skill":"investigate","event":"completed","branch":"codex/ui-search-exact-parity","outcome":"success","duration_s":"3600","session":"search-parity-0429b76","ts":"2026-07-27T16:09:02.692Z"}
+{"skill":"browse","event":"started","branch":"codex/ui-surfaces","ts":"2026-07-27T16:49:22.111Z"}
+{"skill":"review","event":"started","branch":"codex/ui-surfaces","session":"62065-1785174162","ts":"2026-07-27T17:42:43.103Z"}
+{"skill":"investigate","event":"completed","branch":"codex/gate1-native-full-recovery","outcome":"success","duration_s":"0","session":"native-full-recovery-e34a685","ts":"2026-07-27T17:53:47.221Z"}
+{"skill":"review","event":"completed","branch":"codex/ui-surfaces","outcome":"error","duration_s":0,"session":"review-e399b7e-20260727","ts":"2026-07-27T18:01:20.263Z"}
