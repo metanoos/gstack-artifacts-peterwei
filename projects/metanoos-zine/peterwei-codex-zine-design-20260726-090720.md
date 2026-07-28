@@ -321,7 +321,13 @@ Edge discards need their own disposition vocabulary, because the text categories
 
 Deletion is never destructive; **redaction** is the separate, deliberate operation that destroys content, and it is required rather than optional. Secret scanning is defense-in-depth and not a completeness guarantee, so the design already concedes that a key, a password, or a third party's confidence can reach the trace. Conceding that without an exit would leave an unfixable hole and an obligation to others that cannot be met.
 
-Redaction **zeroes a payload and keeps its record**. The event, its position, its predecessor hash, and the chain around it all survive and still verify; only the content is gone. Records are never removed, because removing one would break verification and make the corpus lie about what happened. A redacted record renders as redacted — an authored absence, not a silent gap.
+Redaction **destroys content while preserving the chain, because the chain only needs hashes**. Records are never removed; removing one would break verification and make the corpus lie about what happened.
+
+`chain_hash` binds sequence, predecessor, event, payload checksum, nonce, and ciphertext, and successors chain off the *stored* value. So redaction keeps that stored `chain_hash` untouched — successor `predecessor_hash` links still resolve and the tail still verifies — while dropping both the ciphertext and the plaintext checksum. The plaintext digest must go with it: retaining a commitment to destroyed content leaves a confirmation oracle, and against low-entropy content such as an API key that is a working attack rather than a theoretical one.
+
+Verification therefore has three outcomes rather than two: **valid, redacted, invalid.** For a record marked redacted it skips decryption and checksum comparison, accepts the stored `chain_hash`, and continues from it. **An appended redact event naming the affected sequences is what authorizes that skip**, which yields the property the whole operation depends on: a zeroed record with no corresponding redact event is *corruption*, not redaction. Tampering and an authored act remain distinguishable.
+
+A redacted record renders as redacted — an authored absence, not a silent gap. Naively zeroing a payload in place, without the redact event and the third verification state, halts verification for the entire tail; the `#[cfg(test)]` corruption fixture that does exactly that is a test that redaction must not resemble.
 
 Consequences must be stated rather than implied:
 
@@ -2051,9 +2057,18 @@ Founder decisions:
 - **Redaction replaces "erase permanently."** Deletion stays non-destructive; redaction is the
   separate deliberate operation that destroys content, and it is required rather than optional,
   because secret scanning is explicitly not a completeness guarantee and a conceded hole with
-  no exit is an obligation that cannot be met. It zeroes a payload and keeps the record, so the
-  chain still verifies and the corpus never lies about what happened. Published issues cannot
-  be recalled; withdrawing reach changes availability, not existence.
+  no exit is an obligation that cannot be met. Published issues cannot be recalled; withdrawing
+  reach changes availability, not existence.
+- **Correction to the redaction mechanism, made after implementation review.** An earlier
+  revision claimed the primitive already existed in the journal and that zeroing a payload keeps
+  the record verifiable. Both were wrong: the routine in question is a `#[cfg(test)]` corruption
+  fixture, and verification decrypts, compares the plaintext digest, and recomputes the chain
+  hash over the ciphertext — so an in-place zeroing halts verification for the entire tail. The
+  correct shape keeps the stored `chain_hash`, drops the ciphertext *and* the plaintext checksum
+  (a retained digest of destroyed content is a confirmation oracle against anything low-entropy),
+  marks the record redacted, and appends a redact event naming the sequences. Verification gains
+  a third outcome so that a zeroed record without its redact event reads as corruption rather
+  than as an authored act.
 
 ### Iteration 26 — Issue Addressing Rule and Unified Search
 
