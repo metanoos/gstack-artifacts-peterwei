@@ -193,6 +193,15 @@ Nested folders remain boundaries. A parent lists a child folder as one direct me
 
 `zine` is a separate published-artifact resource kind. It has stable identity, a mutable display name, an ordered append-only list of immutable issue IDs, share/reachability records, and zine-level tombstone or revocation status. It points into file or folder history through each issue's exact Step; it does not become another mutable authoring container.
 
+`identity` is a resource kind representing one publisher, and it is **an authored shell around observed data**. Its identity is the pubkey and nothing else; every other attribute belongs to that person and changes without notice. It cannot be a `source`, because a source pins one concrete verified event and a profile is a replaceable kind 0 — pinning a snapshot would freeze a name and picture from whenever you first encountered someone.
+
+- **Authored by you:** petname, annotations, roll membership, group membership, disclosure choices. Ordinary trace events. The petname is what display and sorting use, so your lists do not reorder when a person renames themselves.
+- **Observed from the network:** kind-0 profile, NIP-65 relay hints, last-seen activity, NIP-05 verification. These are observation events carrying observer, serving relays, retrieval time, and freshness — never authored mutations. A verified NIP-05 establishes that a domain vouched at a moment, not who someone is.
+
+An identity has no material text, like a folder, and **does not own that person's works**. Their issues are separate sources pinned to concrete events; queries find them. Identities are created by **encounter** rather than by following: citing someone's essay creates one. Roll membership is therefore a subset of the identities you hold, and removing someone from the roll never deletes the identity or invalidates citations into their work.
+
+A pubkey is also a natural voice ID, so the person listed in a roll and the attributed run inside a document resolve to one object.
+
 ## Actions, Steps, and Commits
 
 The kernel distinguishes authored actions, semantic landmarks, and technical persistence boundaries.
@@ -307,6 +316,21 @@ Rules:
 **Membership removal is typed discard evidence, not a text Ghost.** Removing a member from a folder produces a `membership_discard` projection keyed to folder and member resource, following the same pattern as `query_rejection` under Model-Assisted Filtering: it shares Ghost visibility, disclosure, and inspection semantics but is not character-anchored and does not use the text-Ghost reducer. Position identity governs scalars and has nothing to say about edges.
 
 Edge discards need their own disposition vocabulary, because the text categories do not map. `MOVED` must cover relocation to another folder and must never render as a decline — a work moved elsewhere is the single most common removal and the one most damaging to misread, since a folder discard names a resource and, when published, names its author. Removals incidental to reordering produce no discard evidence at all.
+
+### Redaction
+
+Deletion is never destructive; **redaction** is the separate, deliberate operation that destroys content, and it is required rather than optional. Secret scanning is defense-in-depth and not a completeness guarantee, so the design already concedes that a key, a password, or a third party's confidence can reach the trace. Conceding that without an exit would leave an unfixable hole and an obligation to others that cannot be met.
+
+Redaction **zeroes a payload and keeps its record**. The event, its position, its predecessor hash, and the chain around it all survive and still verify; only the content is gone. Records are never removed, because removing one would break verification and make the corpus lie about what happened. A redacted record renders as redacted — an authored absence, not a silent gap.
+
+Consequences must be stated rather than implied:
+
+- **Disposable projections rebuild.** Indexes and snapshots reproject without the payload.
+- **Published issues cannot be recalled.** Redaction changes local bytes and future projections; an issue already shared is immutable and already distributed. Withdrawing reach is the only available action, and it changes availability rather than existence.
+- **Citations into redacted content resolve to an explicit redacted state**, never a broken anchor and never a silent omission.
+- **Oblivion is a container, not an operation.** Moving a resource there is reversible; emptying it redacts the payloads of what it holds, and that act is itself recorded.
+
+The product verb should say what happens. "Erase permanently" promises deletion Zine does not perform and would not survive its own integrity claims.
 
 
 
@@ -585,7 +609,19 @@ A Ghost hit is meaningless without context. Each result shows the Ghost text, th
 
 ### Placement
 
-Search is invoked from the action palette and renders as a **column, not a modal**, so results stay open beside the text being written. This matters most when pulling Ghosts into a draft.
+Search is **one input in the left surface**, not a modal and not a second panel. The requirement it has to meet is persistent visibility beside the document with enough width for two-line results — a Ghost hit shows the abandoned text *and* what currently occupies its anchor, and manual corpus injection is a multi-select performed while the draft stays visible. A resizable left surface satisfies that; an earlier revision specified a workspace column, which was one way to meet the requirement rather than the requirement itself.
+
+One query, **typed result groups**, rather than a mode the writer selects first:
+
+- **Resources** — locate and open. One line per hit: title and path.
+- **Evidence** — material, Ghost, commentary, and source hits. Two lines per hit, with layer, voice, scope, and kind filters applying to this group only, plus snippets and ranking.
+
+**There are exactly two search interfaces**, and no third.
+
+- **CMD+F** — find in the active document. Scoped to the open projection, rendered in the tab, never in the left surface.
+- **CMD+SHIFT+F** — the unified search in the left surface, with both result groups.
+
+Keybindings follow platform convention rather than reassigning it: rebinding CMD+F to a corpus search would spend cross-platform muscle memory for nothing, since a document find has to exist regardless. There is deliberately no separate open-by-name palette — locating a resource is the Resources group of the unified search, and a third entry point would fragment the same query across three chords.
 
 ### Semantic Retrieval
 
@@ -843,6 +879,24 @@ The mechanism is asymmetric on purpose.
 
 The cost is stated rather than mitigated: **a reader who publishes no blogroll is unreachable through the same transitive query they rely on.** Asymmetry is a deliberate choice to consume a public graph without contributing an involuntary one, and it is honest only while the editorial list actually gets written. Bootstrapping still requires one introduction obtained out of band; reposts compound from there.
 
+#### Roll, groups, and the following surface
+
+Three layers, and the separation matters because two of them are data and one is a work.
+
+- **The roll** is flat membership over `identity` resources — everyone you follow. It drives polling. It has **no authored order**, because there is no editorial sequence over *everyone*; sorts on it are display preference only.
+- **A group** is a **named, non-exclusive subset** of the roll. People do not partition — someone writes on theology *and* poetry, and is also someone you know personally — so groups cannot be nested folders, whose membership is exclusive. This is the third application of the same rule: anything that must appear in several places is a reference, not a member.
+- **A blogroll issue** is the published essay *about* a group. Prose, reasons, the case for reading these people. Optional; its absence costs nothing but discoverability.
+
+Membership is typed rather than parsed out of prose. A group whose members were citations inside a document would be indistinguishable from an essay that happens to cite twelve people, and editing a paragraph could silently drop someone from a query.
+
+That typing is what makes a group a **query seed**: its members are the `authors` list of an ordinary NIP-01 filter, so *what did this group publish this interval* is one request rather than an aggregation. It reuses the existing `query` machinery unchanged — authored filters, run manifests with completeness state, results into an inbox, promotion by authored event.
+
+Groups may be **published as NIP-51 sets** so other clients can act on them; the kind is checked against the current registry alongside every other allocation. A published blogroll is the readable artifact and the set is its structured companion — the same split already used for an issue and its evidence bundle.
+
+**Surface placement.** Following is a navigational list and belongs in the left surface beside the directory, not as folders in the workspace tree; fifty people would otherwise sit beside the essays. Groups render above the flat roll. Selecting a group scopes the list; opening one is explicit and creates a tab, matching the existing rule that `Open in tab` is never automatic. Roll sorts are named on screen like folder projections, and default to **when you last read someone** rather than when they last published — surfacing neglect rather than novelty, and refusing the one sort that would make the surface behave like a timeline.
+
+Profiles are fetched on add or explicit refresh and rendered from cache. Nothing fetches on render: a profile request triggered by displaying a document would tell those relays which document is being read.
+
 This subsection is Gate 6, alongside Queries and inboxes, and inherits their discipline: no feed, no notifications, no unread counts, no follower or repost totals anywhere in the interface.
 
 ## Reflection
@@ -888,6 +942,15 @@ The voice and relationship lists are part of the scrollable authored artifact or
 For a folder, the three lists describe the folder artifact itself. Descendant citation totals are expandable roll-ups and must not be flattened into folder-level provenance; reactions remain identities with freshness.
 
 Incoming relationships are observations and require a freshness state such as current, stale/offline, or unavailable. Counts must never claim global completeness. Outgoing citations are authored references carried by the resource.
+
+That asymmetry — outgoing authored and complete, incoming observed and partial — holds only while the subject is **your** resource. For a foreign subject, a source or an identity, both directions become observed: you cannot know all of someone else's outgoing citations, only the ones you fetched. Relationship lists on those tabs therefore carry a **scope toggle**:
+
+- **Personal** — the relation intersects your corpus. Which of their works you cite, which of your works they cite. Complete, verifiable, and yours.
+- **Global** — anyone, anywhere. Whatever relays answered.
+
+The toggle is also the honest-count boundary, so rendering differs by scope rather than only content: **personal scope may show totals; global scope shows named identities with freshness and never a total.** *Three of their works are cited in my corpus* is a fact about data you hold. *Twelve people cite this* is a claim about a set you cannot enumerate.
+
+Global scope on a source is citation rendezvous — *who else cites this* — reached as a toggle on a tab already open rather than through a separate discovery surface.
 
 ## Tab-Local Ghost Transport
 
@@ -1039,6 +1102,14 @@ This is the conventional reading of NIP-23, where `d` identifies an article and 
 The consequence is that **nothing is ever superseded**, so third-party relays retain back issues by ordinary behavior and a citation to any issue resolves for a third party who holds none of its bytes. Citation durability is therefore transitive rather than holder-only, and no relay requires a non-default retention policy.
 
 The zine address is a separate small **index event** listing its issue IDs in order — the published form of the ordered append-only list a zine already is. It is the one publication object that genuinely changes, so it is the only one that legitimately takes a replaceable address. A Zine-aware client resolves it to *latest issue*; a generic client shows nothing useful there, which is accepted: what people share is a piece, and every piece renders correctly at its own permanent address.
+
+**The `d` value is the issue's own content-addressed ID**, the same address already computed over the issue envelope. Three properties decide this against the alternatives:
+
+- **Collision is benign rather than destructive.** Under any other scheme — issue ordinal, title slug, random value — a repeated `d` silently replaces an immutable issue, which is the single failure this model cannot absorb. Under content addressing a collision means identical bytes, so the second publication *is* the first and republication is idempotent. The fail-closed collision check remains, but it stops guarding against data loss and starts guarding against a bug.
+- **No allocation coordination.** An ordinal requires reading the current count before writing, which is a race as soon as Gate 4 grants a second device Commit authority. A content address needs no shared state and no sequence.
+- **Nothing is guessable.** An ordinal address lets anyone enumerate a run or probe whether a given issue exists, which discloses publication cadence to a party who was never given a locator.
+
+The apparent cost — unreadable addresses — is not real. Human-readable paths belong to the HTTPS archive, which may map any slug it likes onto an event ID, and a generic client displays the `title` tag rather than the `d`. Readability is a presentation concern; the address is an identity.
 
 The issue remains Zine's immutable content-addressed artifact. **The** `30023` **event is one distribution of it, not the artifact itself**—otherwise the immutability guarantee would be delegated to a replaceable event kind.
 
@@ -1953,3 +2024,56 @@ Founder decisions:
 - Rejected dual-publishing both addresses. It preserves generic rendering of the zine pointer
   at the cost of duplicating article bytes against the 64 KiB event ceiling, for an address
   almost nobody dereferences.
+
+### Iteration 25 — Identity, Roll, and Redaction
+
+**Verdict:** KIND ADDED, OPERATION NAMED
+
+Founder decisions:
+
+- Added the `identity` resource kind: an authored shell around observed data, keyed by pubkey,
+  with petname and annotations authored and profile, relay hints, and NIP-05 observed with
+  freshness. It cannot be a `source`, because a source pins one concrete event and a profile is
+  replaceable. Identities are created by encounter, not by following, so roll membership is a
+  subset of the identities held and unfollowing never deletes a person from the corpus.
+- The roll is flat membership with no authored order; a group is a named non-exclusive subset;
+  a blogroll is the published essay about a group. Groups cannot be nested folders because
+  people do not partition — the third time the containment-versus-reference rule has decided a
+  question.
+- Group membership is typed rather than parsed from prose. A group whose members were citations
+  in a document would be indistinguishable from an essay that cites people, and editing a
+  paragraph could silently change a query. Typed membership is what makes a group a query seed:
+  its members are the `authors` list of an ordinary filter.
+- Relationship lists on foreign subjects carry a personal/global scope toggle, which doubles as
+  the honest-count boundary — personal scope may show totals because it is your own data;
+  global scope names identities with freshness and never totals. Global scope on a source is
+  citation rendezvous, reached from a tab rather than a separate surface.
+- **Redaction replaces "erase permanently."** Deletion stays non-destructive; redaction is the
+  separate deliberate operation that destroys content, and it is required rather than optional,
+  because secret scanning is explicitly not a completeness guarantee and a conceded hole with
+  no exit is an obligation that cannot be met. It zeroes a payload and keeps the record, so the
+  chain still verifies and the corpus never lies about what happened. Published issues cannot
+  be recalled; withdrawing reach changes availability, not existence.
+
+### Iteration 26 — Issue Addressing Rule and Unified Search
+
+**Verdict:** RULE PINNED, PLACEMENT CORRECTED
+
+Founder decisions:
+
+- The `d` value is the issue's own content-addressed ID. The deciding property is that collision
+  becomes benign: under an ordinal, title slug, or random value a repeated `d` silently replaces
+  an immutable issue, while under content addressing a collision means identical bytes and
+  republication is idempotent. It also removes allocation coordination, which would otherwise be
+  a race once Gate 4 grants a second device Commit authority, and it leaves nothing guessable,
+  so no one can enumerate a run or probe publication cadence. Readable addresses belong to the
+  HTTPS archive, not to the `d` tag.
+- Search is one input in the left surface with typed result groups — resources to open, evidence
+  to research — rather than a mode chosen before typing. The earlier "renders as a column"
+  specification confused one solution with the requirement, which is persistent visibility
+  beside the document at enough width for two-line results.
+- Exactly two search interfaces, no third: CMD+F finds in the active document and stays in the
+  tab; CMD+SHIFT+F raises the unified search in the left surface. No separate open-by-name
+  palette — locating a resource is a result group, and a third chord would fragment one query
+  across three entry points. The document find has to exist regardless, so rebinding CMD+F
+  would spend cross-platform muscle memory for nothing.
