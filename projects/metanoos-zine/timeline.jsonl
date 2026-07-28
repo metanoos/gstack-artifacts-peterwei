@@ -300,3 +300,4 @@
 {"skill":"investigate","event":"completed","branch":"codex/gate1-warm-renderer-bootstrap","outcome":"success","session":"subagent-gate1-warm-renderer-bootstrap","ts":"2026-07-28T06:06:03.750Z"}
 {"skill":"review","event":"completed","branch":"codex/gate1-editor-first-chunk","outcome":"success","duration_s":0,"session":"review-editor-first-1785222886","ts":"2026-07-28T07:14:47.108Z"}
 {"skill":"review","event":"completed","branch":"codex/gate1-editor-first-chunk","outcome":"success","duration_s":0,"session":"review-editor-followup-1785223679","ts":"2026-07-28T07:27:59.537Z"}
+{"skill":"review","event":"completed","branch":"codex/gate1-recovery-integration","outcome":"success","duration_s":0,"session":"artifact-binding-postintegration-audit","ts":"2026-07-28T15:43:58.189Z"}
