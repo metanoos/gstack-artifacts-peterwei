@@ -312,3 +312,4 @@
 {"skill":"investigate","event":"completed","branch":"codex/gate1-performance-deferred","outcome":"success","duration_s":"300","session":"gate1-empty-vault","ts":"2026-07-29T15:12:25.479Z"}
 {"skill":"browse","event":"completed","branch":"codex/vocabulary-pass-1","outcome":"abort","duration_s":"0","session":"codex-1785338677","ts":"2026-07-29T15:24:37.375Z"}
 {"skill":"review","event":"completed","branch":"codex/pre-gate2a-product-integration","outcome":"success","duration_s":300,"session":"pre-gate2a-docs-review","ts":"2026-07-29T16:08:45.981Z"}
+{"skill":"cso","event":"completed","branch":"codex/pre-gate2a-product-integration","outcome":"success","duration_s":"420","session":"3205-1785341105","ts":"2026-07-29T16:12:57.570Z"}
