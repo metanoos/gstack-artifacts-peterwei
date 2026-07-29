@@ -302,3 +302,11 @@
 {"skill":"review","event":"completed","branch":"codex/gate1-editor-first-chunk","outcome":"success","duration_s":0,"session":"review-editor-followup-1785223679","ts":"2026-07-28T07:27:59.537Z"}
 {"skill":"review","event":"completed","branch":"codex/gate1-recovery-integration","outcome":"success","duration_s":0,"session":"artifact-binding-postintegration-audit","ts":"2026-07-28T15:43:58.189Z"}
 {"skill":"investigate","event":"completed","branch":"codex/gate1-warm-verifier-pipeline","outcome":"success","session":"warm-verifier-pipeline-20260728","ts":"2026-07-28T15:48:35.325Z"}
+{"skill":"investigate","event":"completed","branch":"codex/gate1-startup-budget-v3","outcome":"unknown","duration_s":0,"session":"gate1-startup-budget-v3","ts":"2026-07-28T17:04:23.403Z"}
+{"skill":"investigate","event":"started","branch":"codex/gate1-controlled-benchmark-profile","session":"44587-1785278290","ts":"2026-07-28T22:38:11.128Z"}
+{"skill":"investigate","event":"completed","branch":"codex/gate1-controlled-benchmark-profile","outcome":"success","duration_s":"0","session":"gate1-controlled-benchmark-followup","ts":"2026-07-28T23:03:33.618Z"}
+{"skill":"investigate","event":"completed","branch":"codex/gate1-automation-final-fixes","outcome":"success","duration_s":"0","session":"gate1-automation-final-fixes","ts":"2026-07-28T23:48:23.897Z"}
+{"skill":"review","event":"completed","branch":"codex/gate1-low-overhead-probe","outcome":"success","duration_s":0,"session":"gate1-probe-correctness-review","ts":"2026-07-29T01:36:39.834Z"}
+{"skill":"investigate","event":"started","branch":"codex/gate1-performance-deferred","session":"12103-1785337779","ts":"2026-07-29T15:09:42.122Z"}
+{"skill":"investigate","event":"completed","branch":"codex/gate1-performance-deferred","outcome":"success","duration_s":"300","session":"gate1-empty-vault","ts":"2026-07-29T15:12:08.790Z"}
+{"skill":"investigate","event":"completed","branch":"codex/gate1-performance-deferred","outcome":"success","duration_s":"300","session":"gate1-empty-vault","ts":"2026-07-29T15:12:25.479Z"}

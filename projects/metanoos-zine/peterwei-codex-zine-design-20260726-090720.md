@@ -254,6 +254,8 @@ Asynchronous witness results created after that window—completed NIP-03 kind-1
 
 Reducers must be deterministic, idempotent, and independently testable. Material reduction and Ghost evidence indexing should be separate reducers so a Ghost bug cannot corrupt the surviving document.
 
+An annotation that carries a citation is a single journal event with two anchors: the local anchor (a material span, a removal's scalar IDs, or the document) and the cited foreign span. The cited span resolves against the verified source's bytes at accept time, exactly as any citation does; the local anchor follows the removal-not-Ghost rule above. Reducer-side, this is one event in the annotation reducer that also participates in the citation reducer — not two coordinated events. The neutral ordering fact (*removal happened in the Step after the cited objection*) is computed across reducers from existing journal state, never stored as a causal claim.
+
 ### Normative Event Validity
 
 A schema-valid event is not necessarily trace-valid. The trace validator must reject or quarantine streams with:
@@ -359,7 +361,7 @@ The stated per-scalar ceilings govern one resource. Corpus-scale residency—Gho
 
 Gate 0 must choose the sequence algorithm, encode its single-writer subset in golden fixtures, and measure live IDs plus tombstones at the essay-scale corpus before the editor data structure is considered settled. Concurrent-placement fixtures move to Gate 4.
 
-The Gate 0 ceiling is 32 encoded metadata bytes per live scalar and 24 bytes per tombstoned scalar, excluding the text payload and shared index pages. On the Gate 1 essay corpus, incremental position reduction must remain within the 16 ms p95 input-to-paint budget and cold position projection within 2 s. A candidate that misses any ceiling is rejected or requires an explicitly reviewed revision to this contract before implementation proceeds.
+The Gate 0 ceiling is 32 encoded metadata bytes per live scalar and 24 bytes per tombstoned scalar, excluding the text payload and shared index pages. On the Gate 1 essay corpus, incremental position reduction must remain within the 16 ms p95 app/DOM-commit-work budget and cold position projection within the controlled-hardware ceiling frozen below. Post-rendering observation is separately refresh-relative; a requestAnimationFrame-following task is not evidence that pixels were physically presented. A candidate that misses any ceiling is rejected or requires an explicitly reviewed revision to this contract before implementation proceeds.
 
 Tier 1 has exactly one writing device and therefore no concurrent heads. The **concurrent placement rule**—RGA or Fugue tie-breaking, concurrent insertion ordering, and randomized multi-head merge fixtures—is required only for Tier 2 multi-device authoring and moves to Gate 4.
 
@@ -727,13 +729,17 @@ Fresh model runs render in a transient `unrevised` state until a human edit touc
 
 Commentary response IDs and typed ranges are stable Zine citation targets even though they are not standalone Nostr events. Dismissing, forking, or later orphaning an annotation never mutates its original bytes or receipt. Commentary dismissal is not a Ghost because commentary was never material.
 
-Author notes and model commentary are the same object with different voices: an **annotation** anchored to a material span, a Ghost, or a **folder membership entry**, carrying a voice, rendered in the margin. Reply, Quote-reply, and Interview produce annotations in a model voice; a writer's note produces one in the writer's voice. There is one type, one margin system, and one disclosure grammar.
+Author notes and model commentary are the same object with different voices: an **annotation** anchored to a material span, a removal (viewed through the Ghost surface), or a **folder membership entry**, carrying a voice, rendered in the margin. Reply, Quote-reply, and Interview produce annotations in a model voice; a writer's note produces one in the writer's voice. There is one type, one margin system, and one disclosure grammar. An annotation may also carry citations, not only prose — a note anchored to a removal may cite a signed, frozen span (a published reply, or a private signed message) that the writer attests answering.
 
 The membership anchor is what lets an ordered folder carry per-member rationale — *this one because X, this one as counterpoint* — without giving folders authored prose. It is a third anchor kind on the existing object, not a second annotation type.
 
 - **Never required.** Most Ghosts are never annotated; inferred disposition carries them. Notes exist where the writer knows something the evidence cannot show.
-- **Separate from the Ghost payload.** A Ghost is exact removed bytes. An annotation is a distinct event referencing it and never contaminates those bytes.
+- **Separate from the Ghost payload.** A Ghost is exact removed bytes. An annotation is a distinct event referencing the underlying removal and never contaminates those bytes.
+- **Anchored to the removal, not to the Ghost.** A Ghost is a projection — the floor, survival, and disposition rules run at read time so the corpus re-projects when thresholds change. Anchoring to a projection would orphan the annotation the moment a retuned threshold demotes its target. The durable anchor is the removal event in the journal (the removed span's immutable scalar IDs); the Ghost is the surface the writer happens to be looking at when the annotation is made. The annotation surfaces or not depending on whether that removal currently promotes.
 - **Authoritative when present.** An explicit author annotation overrides inferred disposition in the reader/model projection. The sidecar retains both the inferred receipt and the annotation event ID so the override is inspectable rather than destructive.
+- **Cause lives on the removal, not on the disposition.** Disposition is derived and mutable — a `CUT` becomes a `MOVED` the day its text recurs elsewhere. Any cause attached to the disposition would mutate with it. The cause lives on the removal event, which is immutable, and the disposition is computed alongside it.
+- **Two layers, kept distinct.** The system records ordering and co-occurrence as a neutral fact — *this removal happened in the Step after that cited objection* — which the journal fully supports and which carries no causal claim, the same posture as "existed by, never created at." The writer may optionally attach a citation that upgrades co-occurrence to an attested *I was answering this* — a self-presented claim in the writer's voice, not a neutral account. The dense ordering layer fires every time; the sparse attested layer is the writer's meaning overlaid on it.
+- **Span-stability requires signed-and-frozen, not publication.** What makes a cited span safely resolvable is frozen, independently verifiable bytes — a published reply or a private signed message — not publication per se. Publication determines whether the citation edge enters the public graph, which the visibility rule governs; it is not a precondition for the citation itself.
 - **Separately disclosed.** Publishing a Ghost and publishing an annotation about it are independent choices. Annotations are private by default, for the same reason Ghosts are: a public-by-default note becomes performance.
 
 Inline collaboration is the primary model flow on every authoring client. Reader-only web and mobile clients can render disclosed inline exchanges but cannot invoke or edit them.
@@ -1098,6 +1104,10 @@ The publication command is **Publish**, never Send. An issue is a persistent art
 Withdrawing a locator or access grant changes reachability, not issue bytes. Revocation and signed tombstone status attach to the zine, not to a mutable issue record. Zine must display frozen, shared, withdrawn, and zine-status facts separately. It cannot promise deletion from copies recipients already obtained, and a handed-over file is not retractable.
 
 Eric's issue must work without an account and begins in clean-text mode. One plainly labeled bottom Ghost transport reveals the disclosed process evidence. Public controls use the same text, Ghost, and transport concepts but omit authoring actions and private metadata.
+
+**Annotations do not publish unless explicitly disclosed, regardless of anchor.** The binary rule follows the layer, not the anchor depth: *material publishes; annotations don't, unless disclosed.* A note anchored to material is still apparatus, not prose; a note anchored to a removal (Ghost surface) inherits the Ghost's disclosure; a note anchored to the document as a whole is no more public by default than a span-level note. This is the same grammar Ghosts already follow; the document case is not special-cased into public.
+
+**The public citation graph is built from published work, not from journals.** A private annotation citing B contributes nothing to B's inbound citations. Otherwise the writer's private editorial apparatus would leak through someone else's citations-in surface, which is the same category of leak as publishing raw keystrokes — a category error between the public artifact and the private record, not a setting. This invariant holds even when the cited bytes are themselves public: the edge enters the public graph only when the citing annotation is disclosed.
 
 ### Nostr Publication
 
@@ -1666,17 +1676,23 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 
 ## Performance Targets
 
-Gate 1 targets on Peter's recorded desktop hardware, OS, keyboard, and Tauri build, measured with the 250,000-scalar/100,000-action essay and 2,000-turn conversation corpora, are:
+Gate 1 targets on Peter's recorded desktop hardware, OS, keyboard, display configuration, and Tauri build, measured with the 250,000-scalar/100,000-action essay and 2,000-turn conversation corpora, use one direct absolute profile. All six performance checkpoints run directly and serially with their repeated raw samples retained. A checkpoint passes only when its evidence is valid and every existing frozen absolute budget passes. There is no quiet-window prerequisite, loaded profile, reference-workload calibration, ancestor calibration, intrinsic/reference ratio, process-CPU normalization, load-class multiplier, or system-load adjustment. A miss under the observed load is an honest failure of that run; a later fresh run may pass but cannot reinterpret the failed evidence.
 
-- p95 input-to-paint below 16 ms and p95 durable journal acknowledgement below 50 ms during continuous composition; no acknowledged action loss under the crash corpus.
-- Warm open from a journal-verified snapshot below 500 ms and cold verified journal reduction below 2 s for the Gate 1 essay corpus. Gate 2a repeats the same budget against a commit-verified snapshot and signed Commit reduction.
+The machine-readable evidence retains sanitized environment samples before, during, and after each criterion: Mac model and chip, logical core count, RAM, macOS version, power source and Low Power Mode, thermal state, display configuration digest and refresh rate, normalized load average, aggregate CPU, derived memory measurements, swap delta, sanitized Codex-running/activity state, timestamps, and exact rejection reasons. CPU, load, memory pressure, swap, power state, Low Power Mode, fair thermal state, and Codex activity are contextual only and never change a threshold or verdict. The evidence never retains full process lists, process identifiers, command lines, display serial numbers, or provider credentials.
+
+Hard invalidity is limited to broken measurement semantics or evidence integrity: incomplete or malformed evidence; invalid cadence, chronology, source, suite, criterion, executable, policy, or artifact provenance; a locked or invisible console for a UI proof; display configuration changing during a UI proof; or serious/critical thermal throttling. Renderer checks retain the native-measured refresh adjustment described below. Every failed run remains immutable evidence and the commit-bound runner requires a fresh candidate, six fresh non-overlapping windows, and fresh app/DMG artifacts.
+
+The targets are:
+
+- p95 app/DOM commit work below 16 ms and p95 durable journal acknowledgement below 50 ms during continuous composition. The post-rendering-opportunity observation is at most 1.25 times the same-window measured refresh interval, with at least 30 raw refresh intervals plus raw dispatch cadence and scheduling lateness retained. At 60 Hz, approximately 17–20 ms is a healthy single refresh; this endpoint must not be described as physical pixel presentation. No acknowledged action is lost under the crash corpus.
+- Warm open from a journal-verified snapshot below 500 ms and cold verified journal reduction below 2 s remain the frozen Gate 1 essay-corpus targets. A miss remains non-green and does not derive or relax a ceiling. Gate 2a repeats the same frozen budget against a commit-verified snapshot and signed Commit reduction.
 - Nearby Step navigation below 100 ms without full-log replay; Ghost-threshold reprojection below 500 ms.
 - A 10,000-event folder keeps p95 scroll frames below 16 ms through virtualized member and timeline rendering.
 - At Gate 3, issue generation is byte-deterministic and completes below 2 s for the Gate 1 essay corpus.
 - Local FTS5 search returns the first ranked column within 100 ms p95 on the full Gate 1 material/Ghost/commentary/source corpus. Gate 0 measures full-file re-index cost rather than assuming it is sub-millisecond; Gate 1 freezes the measured re-index budget before implementation is called complete.
 - Afterimage animation sustains the display refresh target without delaying the underlying edit; reduced-motion behavior has no continuous animation.
 
-These are initial pass/fail budgets, not timeless platform promises. Gate reports record hardware, keyboard, OS, native input clock, Tauri/webview build, corpus hash, percentile distribution, and any explicitly revised budget rather than replacing numbers silently.
+Every pass/fail budget is versioned, reviewed, and frozen before the acceptance run that may satisfy it. Gate reports record hardware, keyboard, display cadence, OS, native input clock, Tauri/webview build, corpus hash, raw samples, percentile distribution, direct policy version, contextual environment telemetry, and any explicitly revised budget rather than replacing numbers silently.
 
 ## Delivery Gates
 
