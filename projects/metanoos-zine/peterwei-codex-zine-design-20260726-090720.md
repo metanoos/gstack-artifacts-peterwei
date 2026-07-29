@@ -776,6 +776,11 @@ Voice appearance is configured in the action/voice palette, which therefore doub
 
 ## Conversation Files
 
+> **Pre–Gate 2a reconciliation hold (2026-07-29).** The current code and this section retain stable
+> conversation resources and explicit forks. The newer Pass 1 product documents propose treating a
+> conversation as a multi-voice file presentation instead. Neither representation may be encoded
+> into Gate 2a schemas or used to delete the compatibility path until Peter freezes the choice.
+
 Conversation files remain first-class for research conversations that are not attached to a passage: exploratory work that stands on its own. They live as ordinary files inside ordinary folders, but they are no longer the primary writing loop.
 
 An inline exchange may be forked into a conversation file when it stops being about its source span and becomes a line of inquiry in its own right. The authored fork action names the inline response, exact source span and Step, destination conversation ID, first conversation turn, and copied or cited context. It never fires automatically. The original inline actions remain in the file as immutable evidence; the conversation begins a new cited branch rather than moving or erasing them.
@@ -1392,7 +1397,7 @@ Desktop-first authoring removes the per-load VPS code-delivery problem that made
 
 - **Device key.** From Gate 2a, each desktop install creates and holds one device key. It signs trace and Tier 1 Commits for that install only.
 - **Identity key.** From Gate 2a, Peter's identity key lives in the OS keychain. It signs the Tier 1 sole-writer binding, later zine/issue freeze records, completed kind-1040 timestamp events, and durable-identity manifests, and participates in NIP-44 decrypt/rehydration through the native custody adapter. A freeze signature authenticates the publisher and exact issue bytes; there is no second self-warranty act.
-- **Provider account session.** Gate 1 enables both Codex/ChatGPT and Claude through each provider CLI's existing account login. Zine has no API-key or provider-token capability: it never reads, copies, persists, returns, logs, or exposes either provider token. Every outbound request requires a native confirmation showing the exact private writing and Ghost evidence to be sent. An unavailable account session fails closed with no automatic login, API-credit, API-key, keychain, or billing fallback; API-key support is deferred unless later need justifies a separately reviewed authentication mode.
+- **Provider account session and separate API custody.** Gate 1 enables Codex/ChatGPT and Claude through each provider CLI's existing account login. Zine never reads, copies, persists, returns, logs, or exposes either provider token. The desktop may separately capture an explicitly selected API credential through a native secure prompt into OS-Keychain custody and expose only an opaque handle to the renderer; API transport is inactive in the current build. Every outbound request requires a native confirmation showing the exact private writing and Ghost evidence to be sent. An unavailable selected session or authentication mode fails closed with no automatic login, API-credit, credential, endpoint, or billing fallback.
 - **Biometric custody.** From Gate 2b, raw timing and enrolled models live in encrypted native storage. The wrapping key or non-exportable handle lives in the OS keychain; the model blob does not need to fit in the keychain.
 
 NIP-07 and NIP-46 remain supported paths for people who prefer an external or remote signer, but they are optional. The trust boundary is capability, not one mandatory signer product.
@@ -1676,6 +1681,12 @@ Invariants 26–33 activate with the signed Commit and replication layer at Gate
 
 ## Performance Targets
 
+> **Execution deferred for the pre–Gate 2a usability milestone (2026-07-29).** The six checkpoints,
+> budgets, and evidence machinery below remain frozen in source, but existing results are
+> historical/stale and no new Gate 1 evidence run should occur until Peter accepts the interface
+> direction. This pause does not reinterpret any earlier result and does not make human acceptance
+> ready.
+
 Gate 1 targets on Peter's recorded desktop hardware, OS, keyboard, display configuration, and Tauri build, measured with the 250,000-scalar/100,000-action essay and 2,000-turn conversation corpora, use one direct absolute profile. All six performance checkpoints run directly and serially with their repeated raw samples retained. A checkpoint passes only when its evidence is valid and every existing frozen absolute budget passes. There is no quiet-window prerequisite, loaded profile, reference-workload calibration, ancestor calibration, intrinsic/reference ratio, process-CPU normalization, load-class multiplier, or system-load adjustment. A miss under the observed load is an honest failure of that run; a later fresh run may pass but cannot reinterpret the failed evidence.
 
 The machine-readable evidence retains sanitized environment samples before, during, and after each criterion: Mac model and chip, logical core count, RAM, macOS version, power source and Low Power Mode, thermal state, display configuration digest and refresh rate, normalized load average, aggregate CPU, derived memory measurements, swap delta, sanitized Codex-running/activity state, timestamps, and exact rejection reasons. CPU, load, memory pressure, swap, power state, Low Power Mode, fair thermal state, and Codex activity are contextual only and never change a threshold or verdict. The evidence never retains full process lists, process identifiers, command lines, display serial numbers, or provider credentials.
@@ -1719,7 +1730,7 @@ Only what the loop requires. Everything that hardens durability, replication, wi
 - Unsigned durable Step landmarks with stable logical identity, ordered position, affected resource heads, and exact journal frontier. They settle Ghosts and drive Search, citations, and playback before any signed transport exists.
 - Prove FTS5 availability in the pinned native SQLite build; freeze tokenizer/index strategy, CJK internal and two-character query semantics, prefix configuration, canonical tie-breaking, rebuild procedure, native/browser parity, and measured re-index cost.
 - Append, Rewrite, Reply, and Quote-reply against a deterministic fake reader adapter, with atomic expected-target material writes and commentary-only annotations.
-- **Choose and pin the real model-reader boundary, endpoint policy, authentication class, retry semantics, and receipt schema for both Codex/ChatGPT and Claude.** Gate 1 uses provider-owned account sessions only, with one exact native confirmation per request and no Zine-readable token or dormant API-key path. This is the blocking decision for the entire thesis and closes first, not last.
+- **Choose and pin the real model-reader boundary, endpoint policy, authentication class, retry semantics, and receipt schema for both Codex/ChatGPT and Claude.** Active Gate 1 sends use provider-owned account sessions, with one exact native confirmation per request and no Zine-readable provider token. A separately selected native-Keychain API credential may be configured, but its transport remains inactive and cannot act as a fallback. This is the blocking decision for the entire thesis and closes first, not last.
 - Prototype Ghost indicators, commentary annotations, voice names, and the afterimage together at wide and narrow widths before freezing gutter behavior.
 - Journal-verified export and crash recovery with no networking of any kind.
 
