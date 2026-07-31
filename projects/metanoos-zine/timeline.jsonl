@@ -313,3 +313,6 @@
 {"skill":"browse","event":"completed","branch":"codex/vocabulary-pass-1","outcome":"abort","duration_s":"0","session":"codex-1785338677","ts":"2026-07-29T15:24:37.375Z"}
 {"skill":"review","event":"completed","branch":"codex/pre-gate2a-product-integration","outcome":"success","duration_s":300,"session":"pre-gate2a-docs-review","ts":"2026-07-29T16:08:45.981Z"}
 {"skill":"cso","event":"completed","branch":"codex/pre-gate2a-product-integration","outcome":"success","duration_s":"420","session":"3205-1785341105","ts":"2026-07-29T16:12:57.570Z"}
+{"skill":"browse","event":"completed","branch":"codex/dogfood-ui","outcome":"success","duration_s":"1","session":"codex-1785448055","ts":"2026-07-30T21:47:35.546Z"}
+{"skill":"investigate","event":"completed","branch":"codex/dogfood-ui","outcome":"success","duration_s":"240","session":"port-1420-20260730","ts":"2026-07-30T23:26:48.408Z"}
+{"skill":"investigate","event":"started","branch":"codex/dogfood-ui","session":"47165-1785456562","ts":"2026-07-31T00:09:23.201Z"}
