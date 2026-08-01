@@ -58,7 +58,7 @@ The first lake is complete only when it demonstrates:
 - exact file replay from the first action to current material;
 - Composition Map and Exact Replay from the same compiled timeline;
 - insert, late-insert, delete, replace, undo, redo, and settled-selection evidence;
-- multi-file folder replay in global journal order;
+- multi-file folder replay in global journal order, including honestly labeled cross-file recurrence;
 - historical folder membership and logical column/tab reconstruction;
 - explicit unavailable states for partial history or unmappable evidence;
 - normalized playback without raw action timing; and
@@ -82,7 +82,7 @@ This is not yet a corpus-wide resident replay engine or a public history format.
 - No keystroke-adjacent timestamps or pause durations are stored.
 - No scroll offsets, pixel coordinates, viewport dimensions, panel widths, or window geometry are stored.
 - Raw cursor motion is not stored.
-- Logical workspace observations and settled selections are private local evidence, separate from authored resource traces.
+- Logical workspace observations and settled selections are private local evidence stored as a separate non-authored event family inside the encrypted journal. They never advance authored resource heads.
 - The observation stream is excluded from model context, publication, relay transport, and export by default. No disclosure control for it is part of this lake.
 
 ### Writing experience
@@ -176,7 +176,7 @@ flowchart LR
 There are three distinct layers:
 
 1. **Authored resource events** change file material or folder membership and advance that resource’s head.
-2. **Private composition observations** describe settled selection and logical workspace state without advancing any authored resource head.
+2. **Private composition observations** are encrypted, globally ordered journal envelopes that describe settled selection and logical workspace state without entering authored resource traces or advancing any authored resource head.
 3. **Composition Timeline** is a disposable deterministic projection over a verified journal prefix.
 
 Neither UI geometry nor a compiled timeline is authoritative. Rebuilding from the same verified prefix and compiler version produces the same timeline.
@@ -214,7 +214,7 @@ The separate observation lane contains:
 - `column.focus.settled`; and
 - optional observation-unavailable markers when capture was disabled or interrupted.
 
-Observations carry durable global journal order or bind to the nearest acknowledged authored frontier. They do not carry raw duration. Repeated transient events coalesce before persistence.
+Observations receive the same durable global journal sequence as every other journal envelope and bind the exact authored resource heads visible when captured. They do not carry raw duration. Repeated transient events coalesce before persistence.
 
 Selection capture occurs:
 
@@ -223,6 +223,105 @@ Selection capture occurs:
 - after IME composition has committed, never from provisional composition text.
 
 Direction is retained because anchor-to-focus order communicates how a selection was made. Pixel rectangles are derived at render time and never stored.
+
+### Observation epochs, baseline, and lifecycle
+
+Logical workspace replay is divided into capture epochs. Every epoch begins with a mandatory `workspace.snapshot` journal envelope bound to the current verified journal head. The snapshot contains logical column IDs and order, tab IDs and in-scope resource bindings, the active tab per column, settled focused column, and any settled selection. It contains no dimensions or scroll state.
+
+An epoch ends with `workspace.capture.ended`. Normal shutdown records `reason: disabled | workspace_closed`; recovery after a crash begins the next epoch with `workspace.capture.interrupted`, pointing to the last valid observation sequence. A gap between epochs is always rendered as unavailable rather than reconstructed from current UI state.
+
+V1 capture is enabled for the private authoring vault while Composition Replay is enabled. Observation envelopes:
+
+- use the journal’s existing authenticated encryption and integrity chain;
+- are included in encrypted local recovery archives and verified snapshots;
+- are excluded from search indexing, model context, publication, relay Commit construction, and content exports;
+- are retained until the user explicitly erases them; and
+- are removed only through the existing authored-redaction mechanism, leaving an explicit unavailable interval in replay.
+
+Disabling capture closes the current epoch. Re-enabling it starts a new baseline snapshot. Clearing observations is a destructive privacy action requiring explicit confirmation; it never deletes authored material events.
+
+Settled selection capture uses a V1 quiet interval of 500ms. The UI creates an in-memory ordering token synchronously with the stable selection anchors. Quiet-interval observations persist asynchronously. Immediately before an authored edit, the pending observation and authored event are appended in one atomic journal transaction, giving the observation the preceding global sequence without an additional input-path fsync. A crash may lose an unpersisted quiet-only selection, but it cannot reorder a boundary selection relative to the authored action; the next epoch marks any interruption.
+
+### Normative V1 schema
+
+The following is the minimum semantic shape. Concrete repository brands may refine the scalar types but may not omit these fields.
+
+```ts
+type GlobalSequence = number;
+type TimelineCursor = { sequence: GlobalSequence; eventId: EventId };
+
+interface TimelineManifestV1 {
+  schema: "zine-composition-timeline-v1";
+  scopeResourceId: ResourceId;
+  scopeKind: "file" | "folder";
+  verifiedJournalHead: EventId;
+  verifiedJournalSequence: GlobalSequence;
+  compilerConfigHash: string;
+  initialScopeFrontier: ScopeFrontierV1;
+  frames: readonly TimelineFrameV1[];
+  keyframeIndex: readonly TimelineKeyframeRefV1[];
+}
+
+interface TimelineFrameV1 {
+  cursor: TimelineCursor;
+  source: { eventId: EventId; resourceId: ResourceId | null; kind: string };
+  before: ScopeFrontierV1;
+  after: ScopeFrontierV1;
+  authoredAction: AuthoredReplayActionV1 | null;
+  observation: WorkspaceObservationV1 | null;
+  mapEvidence: readonly MapEvidenceV1[];
+  normalizedDurationMs: number;
+  unavailable: UnavailableReasonV1 | null;
+}
+
+type UnavailableReasonV1 =
+  | "capture_disabled"
+  | "capture_interrupted"
+  | "damaged_journal"
+  | "missing_material_dependency"
+  | "missing_membership_dependency"
+  | "redacted_evidence"
+  | "unmappable_position"
+  | "outside_scope";
+
+interface WorkspaceSnapshotV1 {
+  epochId: string;
+  columns: readonly {
+    columnId: string;
+    order: number;
+    tabs: readonly { tabId: string; resourceId: ResourceId; active: boolean }[];
+  }[];
+  focusedColumnId: string | null;
+  selections: readonly SettledSelectionV1[];
+}
+```
+
+Canonical timeline serialization uses the repository’s pinned canonical JSON rules: fixed field order, UTF-8, no insignificant whitespace, ordered arrays, and lowercase hexadecimal hashes. The `compilerConfigHash` binds every semantic classifier default, coalescing rule, duration rule, and schema version. Cache placement, keyframe compression, and LRU state are excluded because they cannot change semantic frames.
+
+### Cursor and frame semantics
+
+- Cursor zero is the scope’s initial reconstructed state before the first participating replay-worthy envelope.
+- Cursor `N` names exactly one journal envelope by global sequence and event ID.
+- The stable state at cursor `N` is the **post-event** `after` frontier.
+- Animation for cursor `N` interpolates only between its `before` and `after` projections; event application is atomic.
+- Previous and Next move by one replay-worthy envelope. They never target an ambiguous coalesced group.
+- Scrubbing resolves to one exact cursor. Visual coalescing may animate consecutive events together during Play, but the selected cursor and source event remain singular.
+- Switching Map ↔ Exact Replay preserves the cursor.
+- Map keeps current material fixed and renders evidence associated with the selected cursor; Exact Replay renders the post-event historical state at that cursor.
+
+### Deterministic V1 classifiers
+
+- **Visible deletion floor:** at least one Unicode letter/number run or 12 Unicode scalars.
+- **Deletion survival:** the deletion remains effective through 10 subsequent authored actions in that file or through the verified head, whichever comes first. Undo before that boundary classifies it `reverted`.
+- **Late insertion:** both surviving neighbor lineages predate the insertion by at least 50 authored actions in the same file. Start/end sentinels qualify only when the other neighbor meets the threshold.
+- **Replacement:** comes only from an atomic `text.replace`; the compiler never infers replace from unrelated delete/insert events.
+- **Cross-file recurrence:** the exact case-sensitive normalized scalar sequence of a visible deletion appears in another in-scope file after the deletion. It is labeled `recurs in`, never `moved`, and carries no intent claim.
+- **Retried:** deferred from V1. Repeated removals remain separate deletion evidence until a later classifier specification defines it.
+- **Display coalescing:** consecutive global envelopes may share one Play animation only when they are the same action kind, resource, voice, and input transaction, and no authored, structural, or observation envelope intervenes.
+- **Mappability:** `exact_range` when every referenced surviving position is present; `honest_anchor` when at least one stable boundary lineage survives; `margin_only` otherwise. No fuzzy-text fallback exists.
+- **Normalized duration:** insert/delete 280ms, replace 420ms, selection/workspace observation 220ms, resource switch 360ms, membership transition 500ms. Play-speed controls multiply these values without altering the manifest.
+
+These values are V1 defaults, not hidden heuristics. Any later tuning produces a new configuration hash and reproducible recompile.
 
 ### CompositionTimelineV1
 
@@ -245,17 +344,32 @@ The compiler emits an immutable intermediate representation containing:
 
 Derived labels such as “late insertion” or Ghost disposition are projection results, not stamped authored facts. Changing a threshold recompiles the timeline without rewriting the journal.
 
-### Single-pass compilation and seeking
+### Indexed compilation and seeking
 
-The compiler walks the verified prefix once, maintains per-resource reducer state, and emits sparse keyframes. Seeking starts from the nearest prior keyframe rather than reducing from the first action on every scrub movement.
+Compilation has two deterministic phases:
 
-Keyframe cadence is an implementation tuning parameter. It may adapt to action density and resource switches, but it is never user-visible or treated as a semantic landmark.
+1. **Index:** scan verified envelope metadata to build per-resource event ranges, historical membership intervals, observation epochs, and global-sequence lookup. For every resource that enters scope after its creation, record the prefix frontier needed to reconstruct its entry state.
+2. **Compile:** reduce only the required resource prefixes, merge participating envelopes by global journal sequence, and emit semantic frames. Existing verified material checkpoints may seed resource reduction, but their placement never changes semantic output.
 
-Long folder histories hydrate descendants on demand. The activity drawer virtualizes rows and filters without changing the underlying folder chronology.
+V1 uses a fixed keyframe rule included in compiler configuration: one delta keyframe every 256 replay-worthy events and at every resource-entry membership transition. Keyframes use immutable per-resource states and structural sharing; they do not copy the whole folder. A bounded LRU retains decoded resource states and evicts by byte cost.
+
+Seeking starts from the nearest prior semantic keyframe. Performance caches and eviction state are not serialized into `CompositionTimelineV1` and cannot affect byte-identical semantic output. The activity drawer virtualizes rows and filters without changing the underlying chronology.
 
 ## Folder Federation
 
-A folder replay is a projection over a graph of resource-local traces, not a new trace.
+A folder replay is a projection over the vault’s historically reconstructed resource tree and its resource-local traces, not a new trace.
+
+The topology contract is the existing exclusive ordered-containment model:
+
+- every authored file or folder has exactly one parent folder at a valid frontier;
+- the vault root has no parent and is not an authored replay scope;
+- cycles and self/descendant moves are invalid;
+- links or aliases do not create containment and are not descendants for replay;
+- membership insert/remove on both affected parents and the child parent pointer occur in one atomic transaction;
+- same-folder reorder is one typed atomic reorder event;
+- deleting or moving a resource to Oblivion ends its participation after that membership frontier but does not erase prior folder replay;
+- restoring it creates a new membership interval; and
+- a concurrent or partial membership transaction makes containment unavailable from that frontier until an authored resolution exists.
 
 For each journal event, the compiler reconstructs historical containment. An authored or observation event participates in folder scope only if its resource was a descendant of that folder at that global journal sequence.
 
@@ -269,6 +383,16 @@ Consequences:
 - Moving a resource later cannot rewrite the history of where earlier actions occurred.
 
 Global journal sequence supplies the cross-resource replay order. Resource-local causality remains authoritative within each trace. If the verified prefix cannot establish an unambiguous order or containment state, folder replay stops at the last complete frontier and says why.
+
+Resource-local selection observations participate when their resource was in scope at their global sequence. Workspace-wide observations are projected, not included wholesale:
+
+- a tab event participates only for an in-scope resource;
+- column creation, closure, or settled focus participates only when the column contains an in-scope tab immediately before or after the event;
+- out-of-scope tabs and their titles are omitted rather than leaked;
+- when an omitted tab was active, the scoped projection records `focus outside scope` instead of activating a different tab; and
+- a mixed workspace snapshot is deterministically filtered to in-scope tabs while preserving column IDs and relative order.
+
+Thus Exact Replay is exact for the selected folder scope, not a covert replay of the whole vault.
 
 ## Removing Step Completely
 
@@ -292,13 +416,13 @@ Required removal includes:
 - `StepId`, `StepLandmark`, `currentStepId`, `stepCount`, and `step` trace records;
 - Step creation commands and buttons;
 - Step-aware reducer and writer invariants;
-- Step encoding, material-checkpoint tables, fixtures, and recovery validation;
+- Step encoding and Step-indexed fields inside material checkpoints, fixtures, and recovery validation;
 - Step-driven Ghost survival;
 - Step-bound search, citation, publication, and retry logic;
 - signed Step promotion and Gate 2 object classes; and
 - Step terminology in UI, documentation, tests, and protocol claims.
 
-This is a schema break. Existing development traces containing Steps need not open or migrate. Technical Commit and checkpoint concepts remain, but they are invisible physical persistence mechanisms rather than authored history.
+This is a schema break. Startup and import deterministically reject any Step-bearing trace with `unsupported_step_schema`; nothing is silently discarded or reinterpreted. Because there is no legacy-support requirement, the only recovery path is an explicit developer-authorized new-vault reset after any desired raw export. Technical Commit, material checkpoint, and journal-snapshot mechanisms remain, but they lose every Step-indexed field and remain invisible physical persistence mechanisms rather than authored history.
 
 ### Scope frontiers
 
@@ -341,7 +465,7 @@ Composition Map is the default Read presentation and the quiet history layer in 
 - Replacements: paired removed and inserted evidence.
 - Settled selections: translucent envelopes over surviving ranges.
 - Unmappable selections: margin brackets with the unavailable reason.
-- Movement across files: stable lineage leaders across the relevant visible columns or a focused lineage view.
+- Cross-file recurrence: an explicitly inferred leader stating that the same normalized scalar sequence appears elsewhere; it never claims a proven move unless a future atomic transfer event provides that evidence.
 
 The first aesthetic pass may start from the external review’s “palimpsest desk” palette:
 
@@ -379,6 +503,25 @@ It deliberately does not reconstruct:
 
 If more logical columns existed than the current viewport can legibly display, replay preserves column identity and order while adapting presentation through horizontal access or temporary compression. It must say that geometry has been reflowed rather than silently implying a pixel-perfect recording.
 
+### Mode behavior matrix
+
+| Scope and mode | Material shown | Membership shown | Tabs and columns | Selection | Editing |
+|---|---|---|---|---|---|
+| File · Map · Live | Current file | Current parent context only | Current workspace | Selected historical evidence over current text | Enabled |
+| File · Map · Pinned | Current file | Current parent context only | Current workspace | Evidence at exact cursor over current text | Read-only until Return to Live |
+| File · Exact Replay | Post-event historical file state | Historical parent label when available | Scoped recorded workspace | Historical settled selection | Read-only |
+| Folder · Map · Live | Current material of currently open in-scope files | Current folder tree | Current in-scope workspace | Selected event evidence over current text | Enabled |
+| Folder · Map · Pinned | Current material remains fixed | Current folder tree remains fixed | Current workspace remains fixed; affected resource is emphasized, not opened automatically | Evidence at exact cursor | Read-only until Return to Live |
+| Folder · Exact Replay | Post-event historical states of visible in-scope files | Historical folder tree | Recorded scoped columns, tabs, and settled focus | Historical settled selections | Read-only |
+
+Map never mutates current workspace arrangement while scrubbing. Exact Replay is the only mode that reconstructs historical membership and logical workspace state.
+
+### Live updates and editing
+
+Replay compilation binds one `verifiedJournalHead` and sequence. At Live, newly acknowledged events extend the timeline asynchronously and the Map remains editable. At any earlier cursor or in Exact Replay, the boundary is pinned and the editor is read-only.
+
+If new events arrive while pinned, the transport shows `new actions available`; it does not rebase the cursor or alter compiled frames. **Return to Live** recompiles or extends through the newest verified head. Any attempt to type while pinned first requires Return to Live; Zine never branches silently from a historical frame. Starting an edit while Play is running pauses Play, returns to Live, and only then enables input.
+
 ## Transport and Activity Drawer
 
 The folder transport remains roughly 72–76px and never gains one permanent row per descendant.
@@ -411,13 +554,10 @@ Truthful replay must fail visibly rather than interpolate.
 
 ## Open Questions
 
-These are tuning questions, not architecture blockers:
+These do not change the V1 evidence or replay contracts:
 
-1. What quiet interval best distinguishes a settled selection without capturing ordinary cursor motion?
-2. What normalized duration curve makes small edits legible without making long traces tedious?
-3. What action-distance threshold earns the “late insertion” label?
-4. Should hold-to-expose-lineage enter the first lake or follow after the basic Map is trustworthy?
-5. Which current Zine typography and color tokens should absorb the palimpsest-desk direction during design review?
+1. Should hold-to-expose-lineage enter the first lake or follow after the basic Map is trustworthy?
+2. Which current Zine typography and color tokens should absorb the palimpsest-desk direction during design review?
 
 ## Success Criteria
 
@@ -443,7 +583,7 @@ These are tuning questions, not architecture blockers:
 - Composition Map opens on the full current text by default.
 - Exact Replay is reachable with one switch and no separate forensic workspace.
 - Deleted or unmappable evidence is never fuzzily placed.
-- The transport height is unchanged for one, one hundred, or ten thousand descendants.
+- The transport height is unchanged for one, one hundred, or one thousand descendants.
 - The activity drawer remains responsive through virtualized large-folder fixtures.
 - Reduced-motion mode communicates the same evidence without moving trails.
 
@@ -452,12 +592,12 @@ These are tuning questions, not architecture blockers:
 - New trace schemas contain no Step record or Step foreign key.
 - Search, Ghost classification, citations, publication, recovery, and Gate 2 designs compile and test without Step.
 - No user-facing Step command, count, label, or playback dependency remains.
-- Development-era Step traces are rejected or discarded rather than silently reinterpreted.
+- Development-era Step traces are rejected with `unsupported_step_schema`; reset is explicit and never part of open or import.
 
 ### First authentic use
 
 - Peter completes a real **Writing Under Observation** folder cycle in Zine.
-- He can identify at least one late insertion, moved passage, replacement path, deletion, and settled selection from the Map.
+- He can identify at least one late insertion, cross-file recurrence, replacement path, deletion, and settled selection from the Map without the UI claiming that recurrence proves movement.
 - Exact Replay reconstructs the multi-file sequence without coaching.
 - The Map answers a composition question faster than stepping through historical states alone.
 
