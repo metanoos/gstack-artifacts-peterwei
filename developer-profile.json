@@ -152,16 +152,39 @@
         "folder playback"
       ],
       "ts": "2026-07-26T20:47:04.519Z"
+    },
+    {
+      "date": "2026-08-01T16:46:24Z",
+      "mode": "builder",
+      "project_slug": "metanoos-zine",
+      "signal_count": 5,
+      "signals": [
+        "real_problem",
+        "pushback",
+        "domain_expertise",
+        "taste",
+        "agency"
+      ],
+      "design_doc": "/Users/peterwei/.gstack/projects/metanoos-zine/peterwei-codex-dogfood-ui-design-20260801-094605.md",
+      "assignment": "Use one authentic Writing Under Observation folder to prove exact action replay, logical multi-column workspace replay, settled-selection capture, and the default Composition Map from one shared Step-less timeline.",
+      "resources_shown": [],
+      "topics": [
+        "composition-replay",
+        "folder-trace",
+        "step-removal"
+      ],
+      "ts": "2026-08-01T16:46:25.104Z"
     }
   ],
   "signals_accumulated": {
-    "pushback": 4,
-    "taste": 4,
-    "agency": 5,
+    "pushback": 5,
+    "taste": 5,
+    "agency": 6,
     "defended_premise_with_reasoning": 1,
-    "domain_expertise": 2,
+    "domain_expertise": 3,
     "defended_premise": 2,
-    "named_users": 1
+    "named_users": 1,
+    "real_problem": 1
   },
   "resources_shown": [
     "https://www.youtube.com/watch?v=z1iF1c8w5Lg",
@@ -185,7 +208,10 @@
     "mobile-collaboration",
     "trace-native writing",
     "ghost trails",
-    "folder playback"
+    "folder playback",
+    "composition-replay",
+    "folder-trace",
+    "step-removal"
   ],
   "migrated_at": "2026-06-08T20:29:40.301Z",
   "schema_version": 1,
