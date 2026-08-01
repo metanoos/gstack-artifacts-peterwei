@@ -344,6 +344,32 @@ The compiler emits an immutable intermediate representation containing:
 
 Derived labels such as “late insertion” or Ghost disposition are projection results, not stamped authored facts. Changing a threshold recompiles the timeline without rewriting the journal.
 
+### Normative miniature fixture
+
+Given folder `F`, file `N` (`notes.md`), and file `D` (`draft.md`), the verified journal contains:
+
+| Global sequence | Envelope |
+|---:|---|
+| 10 | atomic membership insert `N` into `F` |
+| 11 | workspace epoch snapshot: column `left`, active tab `N` |
+| 12 | `N` inserts `A sentence worth keeping.` |
+| 13 | atomic membership insert `D` into `F` |
+| 14 | tab `D` opens and activates in column `right` |
+| 15 | `N` deletes `worth keeping` using exact scalar IDs |
+| 16 | `D` inserts the same normalized scalar sequence with new resource-local IDs |
+
+The compiled folder output must have:
+
+- cursor zero: `F` before sequence 10;
+- cursor 10: `N` is a member and appears with its entry-frontier state;
+- cursor 12: Exact Replay shows the post-insert `N`; Map keeps current `N` material and highlights the source insertion identities;
+- cursor 14: Exact Replay reconstructs two columns with `D` active on the right;
+- cursor 15: Map places the exact deleted payload at `N`’s last honest anchor;
+- cursor 16: Map emits `recurs in draft.md`, not `moved`, because the records do not prove intent or transfer; and
+- manifest heads: the verified journal boundary, `F` membership head, and exact heads of `N` and `D`.
+
+Compiling file scope `N` from the same prefix omits membership and `D` events, retains cursor identities 12 and 15, and produces the same post-event `N` text at those cursors. This fixture becomes a canonical compiler golden alongside damaged-membership, interrupted-observation, undo/redo, IME, and redaction fixtures.
+
 ### Indexed compilation and seeking
 
 Compilation has two deterministic phases:
