@@ -1,6 +1,6 @@
 # Design: Zine Composition Replay — The Full Making of a Folder
 
-**Status:** DRAFT FOR SPEC REVIEW  
+**Status:** APPROVED  
 **Mode:** BUILDER — PERSONAL INSTRUMENT  
 **Date:** 2026-08-01  
 **Repository:** `metanoos/zine`  
@@ -28,7 +28,7 @@ Ordinary revision history makes the writing process a destination away from the 
 Zine already records exact insertions, deletions, replacements, undo, redo, stable scalar identities, voices, and durable resource heads. But the product center and playback vocabulary remain deletion-first: Ghosts are the visible history, and manual Steps are the navigation landmarks. That model omits much of what makes composition meaningful:
 
 - a sentence introduced late after its surroundings had stabilized;
-- a phrase moved from notes into an essay;
+- a phrase deleted from notes and later recurring in an essay, without the trace overstating whether it was moved, copied, or independently retyped;
 - a replacement that changed the argument’s direction;
 - a settled selection that shows what the writer was working on before the next authored action;
 - a folder composed through actions across several files; and
@@ -65,6 +65,28 @@ The first lake is complete only when it demonstrates:
 - a fixed-height transport that remains fixed regardless of descendant count.
 
 This is not yet a corpus-wide resident replay engine or a public history format. It is one authentic folder-scale instrument built on architecture that does not need to be discarded when the scope grows.
+
+### Delivery gates and scope boundary
+
+The target architecture removes Step everywhere, but private replay does not wait for unrelated network and publication implementations. Work proceeds in two linked workstreams:
+
+- **Replay workstream:** step-free core authored events, private observations, compiler, Map, Exact Replay, folder federation, and transport.
+- **Frontier migration RFC:** exact replacement contracts for search, citations, publication, recovery metadata, relay Commit construction, and Gate 2 signed objects.
+
+Any Step-dependent surface whose frontier replacement is not implemented is disabled in the new schema; it is not shimmed and does not block replay dogfooding. Publication and Gate 2 remain unavailable until their separate frontier implementation passes its own review.
+
+Replay acceptance is staged:
+
+1. **R0 — Step-free file trace:** new vault, exact actions, direct reduction, and no Step fields.
+2. **R1 — File Exact Replay:** canonical cursor and post-event states match direct reduction.
+3. **R2 — Composition Map parity:** every Map mark shares source identity with the exact frame.
+4. **R3 — Private observation replay:** baseline epochs, settled selection, and logical workspace reconstruction.
+5. **R4 — Folder federation:** historical containment and multi-column scoped replay.
+6. **R5 — Scale and visual hardening:** fixed transport, virtualized drawer, renderer fallbacks, accessibility, and budgets.
+
+Each gate is independently usable and testable; a later gate cannot weaken an earlier truthfulness invariant.
+
+Deferred follow-ons include public composition-history disclosure, signed folder-frontier implementation, cross-corpus retry classification, adaptive semantic classifiers, and hold-to-expose-lineage.
 
 ## Constraints
 
@@ -104,13 +126,13 @@ This is not yet a corpus-wide resident replay engine or a public history format.
 
 ## Premises
 
-1. **Composition Replay is the parent concept.** Ghosts remain disposition-aware discarded alternatives within the broader record of insertion, replacement, selection, movement, and workspace change.
+1. **Composition Replay is the parent concept.** Ghosts remain disposition-aware discarded alternatives within the broader record of insertion, replacement, selection, cross-file recurrence, and workspace change.
 2. **One evidence model feeds both views.** The Map cannot have a separate interpretation of history from Exact Replay.
 3. **Files and folders are replay scopes.** A file replay follows one resource. A folder replay federates resource-local events through historical containment and global journal order.
 4. **Logical workspace state matters.** Columns, tab lists, active tabs, tab moves, and settled focus are part of the private composition observation record.
 5. **Physical workspace state does not.** Pixels, scroll, viewport, panel width, and transient focus are not captured.
 6. **There are no manual Steps.** Authored actions are the chronology; exact frontiers identify stable states.
-7. **There is no Step compatibility obligation.** This is a pre-release personal instrument. The new schema may reject or discard development-era Step traces.
+7. **There is no Step compatibility obligation.** This is a pre-release personal instrument. The new schema rejects development-era Step traces and never discards them during open or import.
 8. **Timing is normalized.** Event order is exact; playback cadence is a presentation choice.
 9. **Present-text geometry is not historical geometry.** Surviving identities may map to the current manuscript. Deleted, displaced, or unavailable branches use an honest margin lane.
 10. **The default transport has constant height.** Detailed resource lanes are an on-demand inspection surface.
@@ -131,7 +153,7 @@ Two independent visual reviews converged on a manuscript-first direction:
 - Keep the activity drawer optional and overlay it rather than resizing the writing surface.
 - Avoid synthetic chapters after removing Steps. Pauses, automatic checkpoints, and resource switches may affect density, but they do not become authored landmarks.
 
-One suggested interaction—**hold to expose lineage**—fits the evidence model but is not required for the first lake. Pressing and holding a surviving phrase would temporarily quiet unrelated history and reveal only that phrase’s insertion, replacements, deleted alternatives, moves, and settled selections.
+One suggested interaction—**hold to expose lineage**—fits the evidence model but is not required for the first lake. Pressing and holding a surviving phrase would temporarily quiet unrelated history and reveal only that phrase’s insertion, replacements, deleted alternatives, cross-file recurrences, and settled selections.
 
 ## Approaches Considered
 
@@ -228,7 +250,7 @@ Direction is retained because anchor-to-focus order communicates how a selection
 
 Logical workspace replay is divided into capture epochs. Every epoch begins with a mandatory `workspace.snapshot` journal envelope bound to the current verified journal head. The snapshot contains logical column IDs and order, tab IDs and in-scope resource bindings, the active tab per column, settled focused column, and any settled selection. It contains no dimensions or scroll state.
 
-An epoch ends with `workspace.capture.ended`. Normal shutdown records `reason: disabled | workspace_closed`; recovery after a crash begins the next epoch with `workspace.capture.interrupted`, pointing to the last valid observation sequence. A gap between epochs is always rendered as unavailable rather than reconstructed from current UI state.
+An epoch ends with `workspace.capture.ended`. Normal shutdown records `reason: disabled | workspace_closed`; recovery after a crash appends `workspace.capture.interrupted` with the last valid observation sequence, then immediately starts a new epoch with a mandatory `workspace.snapshot`. The interval between those two baselines is always rendered as unavailable rather than reconstructed from current UI state.
 
 V1 capture is enabled for the private authoring vault while Composition Replay is enabled. Observation envelopes:
 
@@ -257,21 +279,25 @@ interface TimelineManifestV1 {
   verifiedJournalHead: EventId;
   verifiedJournalSequence: GlobalSequence;
   compilerConfigHash: string;
-  initialScopeFrontier: ScopeFrontierV1;
+  initialScopeFrontier: ScopeFrontierSnapshotV1;
   frames: readonly TimelineFrameV1[];
   keyframeIndex: readonly TimelineKeyframeRefV1[];
 }
 
 interface TimelineFrameV1 {
   cursor: TimelineCursor;
-  source: { eventId: EventId; resourceId: ResourceId | null; kind: string };
-  before: ScopeFrontierV1;
-  after: ScopeFrontierV1;
+  source: { eventId: EventId; resourceIds: readonly ResourceId[]; kind: string };
+  voiceId: VoiceId | null;
+  inputTransactionId: string | null;
+  coalescingGroupId: string | null;
+  beforeFrontierId: string;
+  afterFrontierId: string;
+  frontierDelta: readonly { resourceId: ResourceId; beforeHead: EventId | null; afterHead: EventId | null }[];
   authoredAction: AuthoredReplayActionV1 | null;
   observation: WorkspaceObservationV1 | null;
   mapEvidence: readonly MapEvidenceV1[];
   normalizedDurationMs: number;
-  unavailable: UnavailableReasonV1 | null;
+  dependencyFailures: readonly DependencyFailureV1[];
 }
 
 type UnavailableReasonV1 =
@@ -294,9 +320,101 @@ interface WorkspaceSnapshotV1 {
   focusedColumnId: string | null;
   selections: readonly SettledSelectionV1[];
 }
+
+interface ScopeFrontierSnapshotV1 {
+  frontierId: string;
+  scopeResourceId: ResourceId;
+  scopeHead: EventId | null;
+  resourceHeadMapRoot: string;
+  membershipManifestHash: string | null;
+  membershipAvailability: "available" | "unavailable" | "conflicted";
+  workspaceAvailability: "available" | "unavailable";
+}
+
+interface ResourceFrontierEntryV1 {
+  resourceId: ResourceId;
+  head: EventId | null;
+  status: "available" | "unavailable" | "conflicted";
+  reasons: readonly UnavailableReasonV1[];
+}
+
+interface DependencyFailureV1 {
+  domain: "resource" | "membership" | "workspace" | "evidence";
+  resourceId: ResourceId | null;
+  reason: UnavailableReasonV1;
+  sourceEventId: EventId | null;
+}
+
+type AuthoredReplayActionV1 =
+  | { kind: "text.insert"; resourceId: ResourceId; anchor: PositionAnchor; inserted: readonly PositionedScalar[] }
+  | { kind: "text.delete"; resourceId: ResourceId; anchor: PositionAnchor; removed: readonly PositionedScalar[] }
+  | { kind: "text.replace"; resourceId: ResourceId; anchor: PositionAnchor; removed: readonly PositionedScalar[]; inserted: readonly PositionedScalar[] }
+  | { kind: "history.undo" | "history.redo"; targetEventId: EventId }
+  | WorkspaceTransactionV1;
+
+interface WorkspaceTransactionV1 {
+  kind: "workspace.transaction";
+  transactionId: string;
+  touchedHeads: readonly {
+    resourceId: ResourceId;
+    beforeHead: EventId | null;
+    afterHead: EventId;
+  }[];
+  effects: readonly (
+    | { kind: "membership.insert" | "membership.remove"; folderId: ResourceId; childResourceId: ResourceId; ordinal: number }
+    | { kind: "membership.move"; childResourceId: ResourceId; fromFolderId: ResourceId; fromOrdinal: number; toFolderId: ResourceId; toOrdinal: number }
+    | { kind: "membership.reorder"; folderId: ResourceId; childResourceId: ResourceId; fromOrdinal: number; toOrdinal: number }
+    | { kind: "resource.rename"; resourceId: ResourceId; oldName: string; newName: string }
+  )[];
+}
+
+type WorkspaceObservationV1 =
+  | { kind: "workspace.snapshot"; snapshot: WorkspaceSnapshotV1 }
+  | { kind: "workspace.capture.ended"; epochId: string; reason: "disabled" | "workspace_closed" }
+  | { kind: "workspace.capture.interrupted"; previousEpochId: string; lastValidObservationSequence: GlobalSequence }
+  | { kind: "selection.settled"; selection: SettledSelectionV1 }
+  | { kind: "tab.opened"; columnId: string; columnOrdinal: number; tabId: string; tabOrdinal: number; resourceId: ResourceId }
+  | { kind: "tab.closed" | "tab.activated"; columnId: string; tabId: string; resourceId: ResourceId }
+  | { kind: "tab.moved"; tabId: string; resourceId: ResourceId; fromColumnId: string; fromTabOrdinal: number; toColumnId: string; toTabOrdinal: number }
+  | { kind: "column.opened"; columnId: string; columnOrdinal: number }
+  | { kind: "column.closed" | "column.focus.settled"; columnId: string };
+
+interface MapEvidenceV1 {
+  evidenceId: string;
+  sourceEventIds: readonly EventId[];
+  kind: "inserted" | "late_inserted" | "deleted" | "replaced" | "reverted" | "cross_file_recurrence" | "selection";
+  resourceId: ResourceId;
+  positionIds: readonly PositionId[];
+  mapping: "exact_range" | "honest_anchor" | "margin_only";
+  unavailable: UnavailableReasonV1 | null;
+}
+
+interface SettledSelectionV1 {
+  resourceId: ResourceId;
+  anchor: PositionAnchor;
+  selectedPositionIds: readonly PositionId[];
+  direction: "forward" | "backward";
+  boundResourceHead: EventId | null;
+}
+
+interface TimelineKeyframeRefV1 {
+  cursor: TimelineCursor;
+  keyframeObjectId: string;
+  parentKeyframeObjectId: string | null;
+  frontierSnapshotObjectId: string;
+  changedMaterialSnapshotObjectIds: readonly { resourceId: ResourceId; objectId: string }[];
+  membershipSnapshotObjectId: string | null;
+  workspaceSnapshotObjectId: string | null;
+}
 ```
 
 Canonical timeline serialization uses the repository’s pinned canonical JSON rules: fixed field order, UTF-8, no insignificant whitespace, ordered arrays, and lowercase hexadecimal hashes. The `compilerConfigHash` binds every semantic classifier default, coalescing rule, duration rule, and schema version. Cache placement, keyframe compression, and LRU state are excluded because they cannot change semantic frames.
+
+Every keyframe object ID is the domain-separated hash of its canonical bytes. A keyframe points to its parent and names only material snapshots changed since that parent; unchanged resource states resolve through the structurally shared parent chain. The resolver obtains material and membership snapshots only from the compiler’s verified content-addressed object store, recomputes the hash before use, and rejects a mismatch as `missing_material_dependency` or `missing_membership_dependency`. Exact Replay reconstructs forward from a verified keyframe using the content-bearing `PositionedScalar` deltas in frames. Deleted payloads therefore remain renderable without consulting mutable current state.
+
+Frames carry only frontier IDs and changed-head deltas. Complete resource-head and per-resource availability entries resolve through a content-addressed persistent map whose root is stored in the keyframe frontier object; changing one head or status writes only that map path. Membership and workspace availability remain separate because either can fail while material resources remain valid. A frame may name several typed dependency failures simultaneously. This prevents both false all-or-nothing availability and a frame-by-resource Cartesian expansion.
+
+`voiceId`, `inputTransactionId`, and `coalescingGroupId` make display grouping reproducible from the shared timeline alone. A null coalescing group means the frame always animates independently.
 
 ### Cursor and frame semantics
 
@@ -311,11 +429,11 @@ Canonical timeline serialization uses the repository’s pinned canonical JSON r
 
 ### Deterministic V1 classifiers
 
-- **Visible deletion floor:** at least one Unicode letter/number run or 12 Unicode scalars.
+- **Visible deletion floor:** after trimming leading/trailing Unicode whitespace, at least 12 Unicode scalars and at least 4 Unicode letters or numbers. Source bytes remain unchanged; this test performs no case folding, compatibility normalization, or internal-whitespace collapse.
 - **Deletion survival:** the deletion remains effective through 10 subsequent authored actions in that file or through the verified head, whichever comes first. Undo before that boundary classifies it `reverted`.
 - **Late insertion:** both surviving neighbor lineages predate the insertion by at least 50 authored actions in the same file. Start/end sentinels qualify only when the other neighbor meets the threshold.
 - **Replacement:** comes only from an atomic `text.replace`; the compiler never infers replace from unrelated delete/insert events.
-- **Cross-file recurrence:** the exact case-sensitive normalized scalar sequence of a visible deletion appears in another in-scope file after the deletion. It is labeled `recurs in`, never `moved`, and carries no intent claim.
+- **Cross-file recurrence:** after the deletion, one later destination `text.insert` or `text.replace` event introduces the same exact case-sensitive LF-normalized scalar sequence into another in-scope file, and that sequence did not already exist at the destination’s pre-event frontier. It is labeled `recurs in`, never `moved`, and carries no intent claim.
 - **Retried:** deferred from V1. Repeated removals remain separate deletion evidence until a later classifier specification defines it.
 - **Display coalescing:** consecutive global envelopes may share one Play animation only when they are the same action kind, resource, voice, and input transaction, and no authored, structural, or observation envelope intervenes.
 - **Mappability:** `exact_range` when every referenced surviving position is present; `honest_anchor` when at least one stable boundary lineage survives; `margin_only` otherwise. No fuzzy-text fallback exists.
@@ -337,7 +455,7 @@ The compiler emits an immutable intermediate representation containing:
 - logical columns, tab lists, active tabs, and settled focused column;
 - settled selection episodes;
 - normalized display duration and coalescing group;
-- derived lineage: inserted, deleted, replaced, moved, retried, or late-added;
+- derived lineage: inserted, deleted, replaced, reverted, recurring across files, or late-added;
 - current-text mappability and explicit unavailable reason;
 - keyframes for bounded seeking; and
 - provenance back to source event IDs.
@@ -368,7 +486,7 @@ The compiled folder output must have:
 - cursor 16: Map emits `recurs in draft.md`, not `moved`, because the records do not prove intent or transfer; and
 - manifest heads: the verified journal boundary, `F` membership head, and exact heads of `N` and `D`.
 
-Compiling file scope `N` from the same prefix omits membership and `D` events, retains cursor identities 12 and 15, and produces the same post-event `N` text at those cursors. This fixture becomes a canonical compiler golden alongside damaged-membership, interrupted-observation, undo/redo, IME, and redaction fixtures.
+Compiling file scope `N` from the same prefix includes only transaction subeffects that change `N`’s parent or identity, omits unrelated membership and all `D` material events, retains cursor identities 10, 12, and 15, and produces the same post-event `N` text at material cursors. This supports the historical-parent label without importing the folder’s unrelated history. The fixture becomes a canonical compiler golden alongside damaged-membership, interrupted-observation, undo/redo, IME, and redaction fixtures.
 
 ### Indexed compilation and seeking
 
@@ -396,6 +514,8 @@ The topology contract is the existing exclusive ordered-containment model:
 - deleting or moving a resource to Oblivion ends its participation after that membership frontier but does not erase prior folder replay;
 - restoring it creates a new membership interval; and
 - a concurrent or partial membership transaction makes containment unavailable from that frontier until an authored resolution exists.
+
+A structural change is one canonical `workspace.transaction` journal envelope with one global sequence, one transaction ID, the complete ordered subeffects, and before/after heads for every touched resource. Reducers project those subeffects into each touched resource’s local trace view, but the transaction is stored once and advances all named heads atomically. A replay cursor names the transaction envelope once; file or folder scope includes only its relevant subeffects while preserving the shared transaction identity. A move therefore appears once in global chronology and truthfully changes both parent lists and the child pointer.
 
 For each journal event, the compiler reconstructs historical containment. An authored or observation event participates in folder scope only if its resource was a descendant of that folder at that global journal sequence.
 
@@ -427,7 +547,7 @@ Automatic checkpoints do not justify Step removal by themselves; they solve diff
 | Former Step responsibility | Replacement |
 |---|---|
 | User-visible playback landmark | Ordered authored actions plus derived, non-semantic keyframes |
-| Previous / Next | Previous / next compiled action or coalesced display frame |
+| Previous / Next | Previous / next replay-worthy journal envelope at one canonical cursor |
 | Stable current state | Exact acknowledged resource head |
 | Folder stable state | Frozen scope frontier manifest of membership head plus descendant resource heads |
 | Ghost settlement | Survival through a configurable number of subsequent authored actions, undo/redo state, and disposition |
@@ -578,6 +698,51 @@ Truthful replay must fail visibly rather than interpolate.
 - **Capture disabled:** the timeline marks the interval rather than implying nothing happened.
 - **Reduced motion:** all information remains available through static state changes and labels.
 
+### Dependency and continuation rules
+
+| Missing or invalid input | File replay | Folder replay |
+|---|---|---|
+| Folder membership event affecting scope | Not applicable unless it changes file entry/exit label | Stop the entire scope at the preceding complete frontier; later descendant inclusion cannot be known |
+| Material event for the replayed file | Stop exact material at the preceding valid frontier | Mark that resource unavailable; stop the whole scope only while it is a visible/active member whose state is required by the current frame |
+| Material event for an unopened inactive descendant | Not applicable | Continue chronology with the resource lane unavailable until an event requires its material state |
+| Selection observation | Continue material; mark selection unavailable | Continue material/workspace; mark only the affected selection unavailable |
+| Tab or column observation | Continue material | Continue authored chronology; workspace projection is unavailable until the next complete epoch snapshot |
+| Redacted material payload | Preserve chain and explicit redaction; exact material stops if reduction needs the destroyed bytes | Apply the same resource rule; containment may continue |
+| Unknown observation kind | Ignore only if schema declares it optional and length-delimited | Same; otherwise stop observation projection, not authored reduction |
+
+The compiler records dependencies for every frame: membership intervals, resource heads, observation epoch, and stable position lineages. Continue/stop decisions follow those explicit dependencies rather than a renderer guess.
+
+### Renderer contract and fallback hierarchy
+
+The renderer receives semantic evidence plus live DOM/source mapping; it does not invent lineage.
+
+1. Render an exact surviving range when every stable position maps.
+2. Otherwise render a leader to the surviving predecessor/successor anchor.
+3. Otherwise place the evidence in the resource’s margin-only lane with its reason.
+4. If margin fragments collide, preserve chronological order, stack them behind a count-free disclosure label, and expand in an overlay that does not reflow prose.
+5. Clip cross-column leaders at panel boundaries and continue them with matching endpoint marks; never draw across hidden or out-of-scope content.
+6. On narrow viewports, replace leaders with inline anchor marks opening the same evidence overlay.
+7. Partially surviving ranges render only their exact surviving subranges and put the removed remainder in the margin.
+8. Every visual mark has an accessible description naming action kind, resource, position mapping state, and cursor. Playback controls remain keyboard-operable.
+9. Reduced-motion mode replaces travel with immediate before/after emphasis and persistent labels.
+
+The page’s actual text nodes remain selectable. Trails and leaders use pointer-transparent overlay layers except for explicit evidence controls.
+
+### Performance budgets
+
+Budgets are measured on Peter’s named Gate 1 acceptance Mac with production builds and pinned fixtures:
+
+- added synchronous work on the edit path, including observation-token capture: p95 under 1ms and no additional fsync;
+- file timeline semantic compile, 100,000 envelopes: p95 under 2s in deferred work;
+- folder index plus first usable timeline, 250,000 envelopes across 1,000 descendants: p95 under 3s, with current material interactive before compilation completes;
+- seek from a warm semantic keyframe: p95 under 50ms;
+- playback render work: p95 under 16.7ms per animation frame, with automatic static fallback rather than dropped input;
+- activity-drawer filter over 1,000 visible resources: p95 under 100ms;
+- additional replay working set for the folder fixture: under 256MiB; and
+- serialized semantic timeline plus delta keyframes: linear in participating envelopes and position evidence, with no full-folder snapshot copied per keyframe.
+
+Raw benchmark distributions, fixture identity, source commit, and machine context follow the existing Gate 1 evidence pattern. A budget miss is retained and reported; it never causes the editor to block input.
+
 ## Open Questions
 
 These do not change the V1 evidence or replay contracts:
@@ -647,11 +812,11 @@ Use one authentic **Writing Under Observation** folder to prove exact action rep
 
 ### Execution sequence
 
-1. **Remove Step from the target model.** Define frontier replacements across core trace, checkpoints, Ghosts, search, citations, publication, and Gate 2 before building replay UI.
+1. **Approve the frontier migration RFC and cut the step-free core schema.** Remove Step from core authored events and recovery metadata, disable dependent surfaces, and let search, citations, publication, and Gate 2 re-enable only as their exact-frontier implementations land.
 2. **Define resource and observation schemas.** Add typed folder trace events and a private logical-workspace observation lane without mixing observations into material causality.
 3. **Build the pure compiler.** Emit `CompositionTimelineV1`, keyframes, mappability, normalized frames, and deterministic fixtures in the projections layer.
 4. **Capture one authentic file.** Record settled selection and produce both Map and Exact Replay for the main essay.
-5. **Federate the authentic folder.** Add historical containment, multi-column workspace reconstruction, and movement across supporting files.
+5. **Federate the authentic folder.** Add historical containment, multi-column workspace reconstruction, and honestly labeled cross-file recurrence across supporting files.
 6. **Build the fixed transport and drawer.** Reuse the approved wireframe hierarchy and large-resource virtualization.
 7. **Dogfood and correct claims.** Compare Map against direct replay, inspect unavailable states, and remove any visual element that implies geometry, timing, attention, or intent the trace does not hold.
 8. **Run architecture, design, privacy, and performance review.** Only then treat the first lake as complete.

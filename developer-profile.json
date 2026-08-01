@@ -174,6 +174,21 @@
         "step-removal"
       ],
       "ts": "2026-08-01T16:46:25.104Z"
+    },
+    {
+      "date": "2026-08-01T17:08:48Z",
+      "mode": "resources",
+      "project_slug": "metanoos-zine",
+      "signal_count": 0,
+      "signals": [],
+      "design_doc": "",
+      "assignment": "",
+      "resources_shown": [
+        "https://paulgraham.com/greatwork.html",
+        "https://www.youtube.com/watch?v=Nsx5RDVKZSk"
+      ],
+      "topics": [],
+      "ts": "2026-08-01T17:08:48.082Z"
     }
   ],
   "signals_accumulated": {
@@ -191,7 +206,9 @@
     "https://www.youtube.com/watch?v=rWUWfj_PqmM",
     "https://paulgraham.com/schlep.html",
     "https://paulgraham.com/genius.html",
-    "https://www.youtube.com/watch?v=ksGNfd-wQY4"
+    "https://www.youtube.com/watch?v=ksGNfd-wQY4",
+    "https://paulgraham.com/greatwork.html",
+    "https://www.youtube.com/watch?v=Nsx5RDVKZSk"
   ],
   "topics": [
     "geolocation",
