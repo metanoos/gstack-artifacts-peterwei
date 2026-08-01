@@ -335,3 +335,4 @@
 {"skill":"browse","event":"completed","branch":"codex/dogfood-ui","outcome":"success","duration_s":"600","session":"browse-1785605008","ts":"2026-08-01T17:23:28.619Z"}
 {"skill":"browse","event":"started","branch":"codex/dogfood-ui","session":"61771-1785605200","ts":"2026-08-01T17:26:40.580Z"}
 {"skill":"browse","event":"completed","branch":"codex/dogfood-ui","outcome":"abort","duration_s":"0","session":"browse-fallback-1785605793","ts":"2026-08-01T17:36:33.261Z"}
+{"skill":"investigate","event":"completed","branch":"codex/dogfood-ui","outcome":"success","duration_s":"3030","session":"56560-1785603636","ts":"2026-08-01T17:51:06.283Z"}
