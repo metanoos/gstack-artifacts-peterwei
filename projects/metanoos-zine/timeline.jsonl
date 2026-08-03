@@ -396,3 +396,4 @@
 {"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":240,"session":"browse-tabs-20260803","ts":"2026-08-03T18:28:49.699Z"}
 {"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":"0","session":"vault-nuke-side","ts":"2026-08-03T18:31:13.668Z"}
 {"skill":"investigate","event":"started","branch":"main","session":"investigate-panel-85323-1785781922","ts":"2026-08-03T18:32:02.409Z"}
+{"skill":"ship","event":"completed","branch":"codex/storage-replay-foundation","outcome":"success","duration_s":"2326","session":"90235-1785780024","ts":"2026-08-03T18:39:35.025Z"}
