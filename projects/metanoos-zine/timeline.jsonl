@@ -392,3 +392,5 @@
 {"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"0","session":"26296-1785781368","ts":"2026-08-03T18:22:48.431Z"}
 {"skill":"browse","event":"started","branch":"main","session":"browse-85323-1785781468","ts":"2026-08-03T18:24:28.820Z"}
 {"skill":"browse","event":"started","branch":"main","session":"vault-nuke-side","ts":"2026-08-03T18:28:45.453Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":600,"session":"investigate-tabs-20260803","ts":"2026-08-03T18:28:49.630Z"}
+{"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":240,"session":"browse-tabs-20260803","ts":"2026-08-03T18:28:49.699Z"}
