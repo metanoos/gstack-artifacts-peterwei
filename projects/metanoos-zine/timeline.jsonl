@@ -384,3 +384,5 @@
 {"skill":"design-review","event":"completed","branch":"main","outcome":"success","duration_s":"180","session":"codex-collapsed-nav-20260803","ts":"2026-08-03T18:07:38.853Z"}
 {"skill":"browse","event":"started","branch":"main","session":"side-panels-20260803","ts":"2026-08-03T18:09:39.645Z"}
 {"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":"0","session":"side-vault-open","ts":"2026-08-03T18:12:52.526Z"}
+{"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":"300","session":"side-panels-20260803","ts":"2026-08-03T18:15:28.360Z"}
+{"skill":"investigate","event":"started","branch":"main","session":"85323-1785781139","ts":"2026-08-03T18:18:59.977Z"}
