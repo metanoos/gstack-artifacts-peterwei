@@ -364,3 +364,5 @@
 {"skill":"browse","event":"started","branch":"codex/dogfood-ui","session":"28392-1785773582","ts":"2026-08-03T16:13:02.804Z"}
 {"skill":"investigate","event":"started","branch":"codex/dogfood-ui","session":"codex-1785773964","ts":"2026-08-03T16:19:24.415Z"}
 {"skill":"browse","event":"started","branch":"codex/dogfood-ui","session":"codex-1785774039","ts":"2026-08-03T16:20:39.767Z"}
+{"skill":"benchmark","event":"started","branch":"codex/dogfood-ui","session":"8075-1785774574","ts":"2026-08-03T16:29:34.476Z"}
+{"skill":"benchmark","event":"completed","branch":"codex/dogfood-ui","outcome":"success","duration_s":"180","session":"8075-1785774574","ts":"2026-08-03T16:31:54.767Z"}
