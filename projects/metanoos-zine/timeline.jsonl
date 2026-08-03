@@ -410,3 +410,5 @@
 {"skill":"investigate","event":"started","branch":"main","session":"codex-1785792344","ts":"2026-08-03T21:25:44.088Z"}
 {"skill":"investigate","event":"started","branch":"main","session":"codex-20260803-tab-drop","ts":"2026-08-03T21:27:15.664Z"}
 {"skill":"browse","event":"started","branch":"main","session":"codex-20260803-tab-drop-browser","ts":"2026-08-03T21:28:55.332Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"441","session":"codex-1785792344","ts":"2026-08-03T21:33:05.451Z"}
+{"skill":"investigate","event":"started","branch":"main","session":"codex-20260803-tab-drop-2","ts":"2026-08-03T21:51:04.956Z"}
