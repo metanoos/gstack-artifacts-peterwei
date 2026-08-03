@@ -209,6 +209,22 @@
         "concierge-pilot"
       ],
       "ts": "2026-08-03T16:56:24.670Z"
+    },
+    {
+      "date": "2026-08-03T17:18:56Z",
+      "mode": "resources",
+      "project_slug": "metanoos-zine",
+      "signal_count": 0,
+      "signals": [],
+      "design_doc": "",
+      "assignment": "",
+      "resources_shown": [
+        "https://www.youtube.com/watch?v=TwDJhUJL-5o",
+        "https://www.youtube.com/watch?v=Th8JoIan4dg",
+        "https://paulgraham.com/relres.html"
+      ],
+      "topics": [],
+      "ts": "2026-08-03T17:19:03.510Z"
     }
   ],
   "signals_accumulated": {
@@ -228,7 +244,10 @@
     "https://paulgraham.com/genius.html",
     "https://www.youtube.com/watch?v=ksGNfd-wQY4",
     "https://paulgraham.com/greatwork.html",
-    "https://www.youtube.com/watch?v=Nsx5RDVKZSk"
+    "https://www.youtube.com/watch?v=Nsx5RDVKZSk",
+    "https://www.youtube.com/watch?v=TwDJhUJL-5o",
+    "https://www.youtube.com/watch?v=Th8JoIan4dg",
+    "https://paulgraham.com/relres.html"
   ],
   "topics": [
     "geolocation",
