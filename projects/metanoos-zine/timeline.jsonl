@@ -377,3 +377,4 @@
 {"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":"600","session":"side-browse-20260803-1755","ts":"2026-08-03T17:55:59.563Z"}
 {"skill":"review","event":"completed","branch":"codex/storage-replay-foundation","outcome":"success","ts":"2026-08-03T17:56:30.256Z"}
 {"skill":"ship","event":"started","branch":"codex/storage-replay-foundation","session":"90235-1785780024","ts":"2026-08-03T18:00:24.456Z"}
+{"skill":"review","event":"started","branch":"codex/release-bootstrap","session":"review-bootstrap-1785780193","ts":"2026-08-03T18:03:13.342Z"}
