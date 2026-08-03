@@ -408,3 +408,5 @@
 {"skill":"browse","event":"started","branch":"main","session":"codemirror-live-preview","ts":"2026-08-03T20:36:49.977Z"}
 {"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":"90","session":"codemirror-live-preview","ts":"2026-08-03T20:38:47.651Z"}
 {"skill":"investigate","event":"started","branch":"main","session":"codex-1785792344","ts":"2026-08-03T21:25:44.088Z"}
+{"skill":"investigate","event":"started","branch":"main","session":"codex-20260803-tab-drop","ts":"2026-08-03T21:27:15.664Z"}
+{"skill":"browse","event":"started","branch":"main","session":"codex-20260803-tab-drop-browser","ts":"2026-08-03T21:28:55.332Z"}
