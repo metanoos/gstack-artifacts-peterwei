@@ -401,3 +401,5 @@
 {"skill":"investigate","event":"started","branch":"main","session":"codex-1785782714","ts":"2026-08-03T18:45:14.150Z"}
 {"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"0","session":"investigate-zine-1785782958","ts":"2026-08-03T18:49:18.473Z"}
 {"skill":"browse","event":"started","branch":"main","session":"codex-browse-1785786225","ts":"2026-08-03T19:43:45.256Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"3600","session":"codex-investigate-1785786390","ts":"2026-08-03T19:46:30.729Z"}
+{"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":"600","session":"codex-browse-1785786390","ts":"2026-08-03T19:46:30.839Z"}
