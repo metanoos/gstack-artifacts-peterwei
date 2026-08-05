@@ -449,3 +449,8 @@
 {"skill":"investigate","event":"started","branch":"main","session":"18820-1785945177","ts":"2026-08-05T15:52:57.695Z"}
 {"skill":"review","event":"started","branch":"main","session":"43222-1785946228","ts":"2026-08-05T16:10:28.863Z"}
 {"skill":"review","event":"completed","branch":"main","outcome":"abort","duration_s":"0","session":"review-main-1785946284","ts":"2026-08-05T16:11:25.191Z"}
+{"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":"300","session":"browse-1785946314","ts":"2026-08-05T16:11:55.269Z"}
+{"skill":"review","event":"started","branch":"main","session":"48355-1785946376","ts":"2026-08-05T16:12:56.762Z"}
+{"skill":"browse","event":"completed","branch":"main","outcome":"success","duration_s":"0","session":"codex-61153-1785946657","ts":"2026-08-05T16:17:37.398Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"1937","session":"18820-1785945177","ts":"2026-08-05T16:25:14.158Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"0","session":"local-vault-restore-20260805","ts":"2026-08-05T21:16:26.879Z"}
