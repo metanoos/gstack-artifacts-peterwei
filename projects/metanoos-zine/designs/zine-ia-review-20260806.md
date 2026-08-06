@@ -110,6 +110,18 @@ card at the top of the rail, not floating in it.
 Everything else (mount scope, models, relays, keys) is settings and belongs behind the
 shell, not in it.
 
-## Open decision
+## Decision (settled 2026-08-06)
 
-What a step means: fixed revision ladder vs. free-form prompt vs. user-defined lenses.
+**A step is a named revision pass on a fixed ladder: Argument → Structure → Evidence →
+Line.** Not a free-form prompt. Decision id `187fe38b`.
+
+Implications to build against:
+- `ApparatusItemKind` needs a `step` kind (or `model-proposal` gains a `pass` field)
+  so a step is itself a thread root with observations as children via `parentItemId`.
+- Step scope is the material delta since the previous step of that pass, computed from
+  the authored-event journal.
+- `apparatusKindLabels` gains pass labels for the margin card header.
+- ActionPalette's per-model submit row becomes a voice *selector* (1-2 default), not
+  five parallel fire buttons.
+- `openConversationBesideSource` should be replaced by in-place rail expansion so the
+  body measure never changes.
