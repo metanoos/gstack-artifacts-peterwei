@@ -463,3 +463,5 @@
 {"skill":"design-review","event":"completed","branch":"main","outcome":"success","duration_s":"420","ts":"2026-08-06T15:45:09.510Z"}
 {"skill":"investigate","event":"started","branch":"main","session":"46549-1786032910","ts":"2026-08-06T16:15:10.338Z"}
 {"skill":"investigate","event":"started","branch":"main","session":"codex-1786036815","ts":"2026-08-06T17:20:15.336Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"abort","duration_s":"366","session":"codex-1786036815","ts":"2026-08-06T17:26:21.569Z"}
+{"skill":"investigate","event":"started","branch":"main","session":"codex-1786042045","ts":"2026-08-06T18:47:25.646Z"}
