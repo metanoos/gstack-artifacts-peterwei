@@ -458,3 +458,4 @@
 {"skill":"investigate","event":"started","branch":"main","session":"18859-1785980338-investigate","ts":"2026-08-06T01:38:58.430Z"}
 {"skill":"browse","event":"started","branch":"main","session":"18859-1785980338-browse","ts":"2026-08-06T01:38:58.549Z"}
 {"skill":"investigate","event":"started","branch":"main","session":"88163-1785986203","ts":"2026-08-06T03:16:44.271Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"429","session":"88163-1785986203","ts":"2026-08-06T03:23:52.850Z"}
