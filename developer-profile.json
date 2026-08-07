@@ -9,11 +9,11 @@
       "autonomy": 0.5,
       "architecture_care": 0.5
     },
-    "sample_size": 12,
+    "sample_size": 21,
     "diversity": {
-      "skills_covered": 3,
-      "question_ids_covered": 12,
-      "days_span": 1
+      "skills_covered": 4,
+      "question_ids_covered": 21,
+      "days_span": 2
     }
   },
   "gap": {},
@@ -274,5 +274,5 @@
   ],
   "migrated_at": "2026-06-08T20:29:40.301Z",
   "schema_version": 1,
-  "derived_at": "2026-07-17T23:54:57.093Z"
+  "derived_at": "2026-08-07T20:04:43.041Z"
 }

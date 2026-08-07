@@ -473,3 +473,7 @@
 {"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"0","session":"codex-30606-1786084577","ts":"2026-08-07T06:36:17.180Z"}
 {"skill":"browse","event":"started","branch":"main","session":"62382-1786087589","ts":"2026-08-07T07:26:29.495Z"}
 {"skill":"investigate","event":"started","branch":"main","session":"94065-1786118200","ts":"2026-08-07T15:56:40.322Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"420","session":"subagent-main-fixes","ts":"2026-08-07T16:04:23.379Z"}
+{"skill":"plan-eng-review","event":"started","branch":"main","session":"13440-1786120909","ts":"2026-08-07T16:41:50.221Z"}
+{"skill":"investigate","event":"completed","branch":"main","outcome":"success","duration_s":"900","session":"codex-trace-branch-authority","ts":"2026-08-07T16:55:23.989Z"}
+{"skill":"plan-eng-review","event":"completed","branch":"main","outcome":"success","duration_s":"12258","session":"13440-1786120909","ts":"2026-08-07T20:06:07.667Z"}
